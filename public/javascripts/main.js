@@ -11,8 +11,8 @@
 	});
 
 	let scene = new THREE.Scene();
-	//let camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-	let camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0.1, 1000);
+	let camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+	//let camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1000);
 
 	let material = new THREE.RawShaderMaterial({
 		vertexShader: [
@@ -37,13 +37,13 @@
 
 	let geometry = new THREE.Geometry();
 	for (let i = 0; i < n; i++) {
-		let vector = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, 0);
+		let vector = new THREE.Vector3(Math.random() * 2 - 1, Math.random() * 2 - 1, 0);
 		geometry.vertices.push(vector);
 	}
 
 	let angularVelocities = [];
 	for (let i = 0; i < n; i++) {
-		let vector = new THREE.Vector3(0, 0, Math.max(0.1, random.normal(0.5, 0.341)));
+		let vector = new THREE.Vector3(0, 0, random.normal(0.1, 0.1));
 		angularVelocities.push(vector);
 	}
 
@@ -52,12 +52,12 @@
 
 	let clock = new THREE.Clock();
 
-	camera.position.z = 1;
+	camera.position.z = 3;
 
 	requestAnimationFrame(render);
 
 	function clamp(value) {
-		return Math.min(0.5, Math.max(-0.5, value));
+		return Math.min(1, Math.max(-1, value));
 	}
 
 	function render() {
@@ -65,19 +65,15 @@
 		let t = clock.getDelta();
 
 		let vertices = geometry.vertices;
-		for (let i = 0, len = vertices.length; i < len; i++) {
-			let a = 2 * Math.PI * Math.random();
+		for (let i = 0; i < n; i++) {
+			var a = Math.PI * 2 * t * angularVelocities[i].z;
 			let ca = Math.cos(a);
 			let sa = Math.sin(a);
-
-			ca = vertices[i].y;
-			sa = -vertices[i].x;
-			//
-			//vertices[i].x = (((vertices[i].x + (t * ca / period)) + 0.5) % 1) - 0.5;
-			//vertices[i].y = (((vertices[i].y + (t * sa / period)) + 0.5) % 1) - 0.5;
-
-			vertices[i].x = clamp(vertices[i].x + t * ca * angularVelocities[i].z);
-			vertices[i].y = clamp(vertices[i].y + t * sa * angularVelocities[i].z);
+			vertices[i].set(
+				ca * vertices[i].x - sa * vertices[i].y,
+				sa * vertices[i].x + ca * vertices[i].y,
+				vertices[i].z
+			);
 		}
 		geometry.verticesNeedUpdate = true;
 

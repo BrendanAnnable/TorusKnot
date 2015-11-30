@@ -1,4 +1,4 @@
-(function () {
+(function (THREE) {
 	'use strict';
 
 	let canvas = document.getElementById('canvas');
@@ -7,8 +7,10 @@
 
 	let renderer = new THREE.WebGLRenderer({
 		canvas: canvas,
-		antialias: true
+		antialias: true,
+		alpha: true
 	});
+	renderer.setClearColor('#000');
 
 	let scene = new THREE.Scene();
 	let camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
@@ -32,18 +34,39 @@
 			'}'
 		].join('\n')
 	});
+	material.transparent = true;
+	material.depthTest = false;
+	material.depthWrite = false;
+	material.blending = THREE.CustomBlending;
+	material.blendSrc = THREE.SrcAlphaFactor;
+	material.blendDst = THREE.OneFactor;
+	material.blendEquation = THREE.AddEquation;
 
 	let n = 200000;
 
 	let geometry = new THREE.Geometry();
+
+	var radius = 0.8;
+
 	for (let i = 0; i < n; i++) {
-		let vector = new THREE.Vector3(Math.random() * 2 - 1, Math.random() * 2 - 1, 0);
-		geometry.vertices.push(vector);
+		var theta = random.uniform(0, 2 * Math.PI);
+		let vector = new THREE.Vector3(radius * Math.cos(theta), radius * Math.sin(theta), 0);
+		//var matrix = new THREE.Matrix4().makeTranslation(radius * Math.cos(theta), radius * Math.sin(theta), 0);
+
+		var phi = random.uniform(0, 2 * Math.PI);
+		var distance = random.normal(0.3, 0.02);
+		//var distance = random.uniform(0.2, 1.4);
+		let vector2 = new THREE.Vector3(distance * Math.cos(phi), 0, distance * Math.sin(phi));
+		vector2.applyMatrix4(new THREE.Matrix4().makeRotationZ(theta));
+		vector2.add(vector);
+
+		geometry.vertices.push(vector2);
 	}
 
 	let angularVelocities = [];
 	for (let i = 0; i < n; i++) {
-		let vector = new THREE.Vector3(0, 0, random.normal(0.1, 0.1));
+		let vector = new THREE.Vector3(0, 0, random.normal(0.3, 0.1));
+		//let vector = new THREE.Vector3(0, 0, random.random() * 0.5 + 0.5);
 		angularVelocities.push(vector);
 	}
 
@@ -52,7 +75,7 @@
 
 	let clock = new THREE.Clock();
 
-	camera.position.z = 3;
+	camera.position.z = 4;
 
 	requestAnimationFrame(render);
 
@@ -60,20 +83,16 @@
 		return Math.min(1, Math.max(-1, value));
 	}
 
+	let transform = new THREE.Matrix4();
+
 	function render() {
 		requestAnimationFrame(render);
 		let t = clock.getDelta();
 
 		let vertices = geometry.vertices;
 		for (let i = 0; i < n; i++) {
-			var a = Math.PI * 2 * t * angularVelocities[i].z;
-			let ca = Math.cos(a);
-			let sa = Math.sin(a);
-			vertices[i].set(
-				ca * vertices[i].x - sa * vertices[i].y,
-				sa * vertices[i].x + ca * vertices[i].y,
-				vertices[i].z
-			);
+			let point = vertices[i];
+			point.applyMatrix4(transform.makeRotationZ(2 * Math.PI * t * angularVelocities[i].z));
 		}
 		geometry.verticesNeedUpdate = true;
 
@@ -83,6 +102,9 @@
 			renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 		}
 
+		transform.makeRotationY(2 * Math.PI * t / 30);
+		camera.position.applyMatrix4(transform);
+		camera.lookAt(scene.position);
 		renderer.render(scene, camera);
 	}
-}());
+}(THREE));

@@ -3,6 +3,7 @@
 
 precision highp float;
 
+uniform float time;
 uniform mat4 projectionMatrix;
 uniform mat4 modelViewMatrix;
 
@@ -35,7 +36,7 @@ void main() {
 //	float y = cos(t) - 2.0 * cos(2.0 * t);
 //	float z = -sin(3.0 * t);
 //	gl_Position = projectionMatrix * modelViewMatrix * vec4(0.3 * vec3(x, y, z), 1.0);
-	t = position.x;
+	t = mod((position.x + (time * M_TAU / 100.0)), M_TAU);
 	float p = 3.0;
 	float q = 8.0;
 	vec3 pos = torus_knot(p, q, t);
@@ -49,8 +50,15 @@ void main() {
 
 	mat3 transform = mat3(tangent, bitan, n);
 
-	vec3 point = transform * vec3(0, position.yz);
+	float c = cos(time * M_TAU / 3.0);
+	float s = sin(time * M_TAU / 3.0);
+	mat3 transform2 = mat3(1, 0, 0,
+						  0, c, -s,
+						  0, s, c);
 
+	vec3 point = transform * transform2 * vec3(0, position.yz);
+
+		//	point.setX((point.x + 2 * Math.PI * t / 100) % (2 * Math.PI));
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(0.35 * pos + point, 1.0);
 //	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }

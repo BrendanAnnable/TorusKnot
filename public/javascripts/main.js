@@ -33,6 +33,9 @@
 	//let camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1000);
 
 	let material = new THREE.RawShaderMaterial({
+		uniforms: {
+			time: {type: 'f'}
+		},
 		vertexShader: get('shaders/shader.vert'),
 		fragmentShader: get('shaders/shader.frag')
 	});
@@ -44,7 +47,7 @@
 	material.blendDst = THREE.OneFactor;
 	material.blendEquation = THREE.AddEquation;
 
-	let n = 200000;
+	let n = 400000;
 
 	let geometry = new THREE.Geometry();
 
@@ -52,7 +55,7 @@
 		let theta = random.uniform(0, 2 * Math.PI);
 		let phi = random.uniform(0, Math.TAU);
 		//let mean = 0.05;//0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
-		let mean = 0.01 * Math.sin(7 * (phi - 32 * theta)) + 0.07;
+		let mean = 0.01 * Math.sin(7 * (phi - 48 * theta)) + 0.10;
 		let distance = random.normal(mean, 0.001);
 		let vector2 = new THREE.Vector3(theta, distance * Math.cos(phi), distance * Math.sin(phi));
 
@@ -74,12 +77,7 @@
 		requestAnimationFrame(render);
 		let t = clock.getDelta();
 
-		let vertices = geometry.vertices;
-		for (let i = 0; i < n; i++) {
-			let point = vertices[i];
-			point.applyMatrix4(transform.makeRotationX(Math.TAU * t / 2));
-		}
-		geometry.verticesNeedUpdate = true;
+		material.uniforms.time.value = clock.getElapsedTime();
 
 		if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
 			camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -87,7 +85,7 @@
 			renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 		}
 
-		particles.rotation.z += Math.TAU * t / 20;
+		particles.rotation.z += Math.TAU * t / 30;
 		//transform.makeRotationX(Math.TAU * t / 30);
 		//camera.position.applyMatrix4(transform);
 		//transform.makeRotationY(Math.TAU * t / 30);

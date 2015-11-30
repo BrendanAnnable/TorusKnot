@@ -23,8 +23,17 @@
 			'uniform mat4 modelViewMatrix;',
 			'attribute vec3 position;',
 			'void main() {',
-			'gl_PointSize = 1.0;',
-			'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+				'gl_PointSize = 1.0;',
+				'float distance = 0.8;',
+				'float c = cos(position.x);',
+				'float s = sin(position.x);',
+				'mat4 transform = mat4(c, s, 0, 0,' +
+									  '-s, c, 0, 0,' +
+									  '0, 0, 1, 0,' +
+									  '0, 0, 0, 1);',
+				'vec4 polar = transform * vec4(0, position.y + distance, position.z, 1.0);', // vec3(distance * cos(position.x), distance * sin(position.x) + position.y, position.z);',
+				'gl_Position = projectionMatrix * modelViewMatrix * polar;',
+				//'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
 			'}'
 		].join('\n'),
 		fragmentShader: [
@@ -46,26 +55,24 @@
 
 	let geometry = new THREE.Geometry();
 
-	var radius = 0.8;
-
 	for (let i = 0; i < n; i++) {
 		var theta = random.uniform(0, 2 * Math.PI);
-		let vector = new THREE.Vector3(radius * Math.cos(theta), radius * Math.sin(theta), 0);
+		//let vector = new THREE.Vector3(radius * Math.cos(theta), radius * Math.sin(theta), 0);
 		//var matrix = new THREE.Matrix4().makeTranslation(radius * Math.cos(theta), radius * Math.sin(theta), 0);
 
 		var phi = random.uniform(0, 2 * Math.PI);
 		var distance = random.normal(0.3, 0.02);
 		//var distance = random.uniform(0.2, 1.4);
-		let vector2 = new THREE.Vector3(distance * Math.cos(phi), 0, distance * Math.sin(phi));
-		vector2.applyMatrix4(new THREE.Matrix4().makeRotationZ(theta));
-		vector2.add(vector);
+		let vector2 = new THREE.Vector3(theta, distance * Math.cos(phi), distance * Math.sin(phi));
+		//vector2.applyMatrix4(new THREE.Matrix4().makeRotationZ(theta));
+		//vector2.add(vector);
 
 		geometry.vertices.push(vector2);
 	}
 
 	let angularVelocities = [];
 	for (let i = 0; i < n; i++) {
-		let vector = new THREE.Vector3(0, 0, random.normal(0.3, 0.1));
+		let vector = new THREE.Vector3(0, 0, random.normal(0.3, 0.05));
 		//let vector = new THREE.Vector3(0, 0, random.random() * 0.5 + 0.5);
 		angularVelocities.push(vector);
 	}
@@ -92,7 +99,8 @@
 		let vertices = geometry.vertices;
 		for (let i = 0; i < n; i++) {
 			let point = vertices[i];
-			point.applyMatrix4(transform.makeRotationZ(2 * Math.PI * t * angularVelocities[i].z));
+			point.applyMatrix4(transform.makeRotationX(2 * Math.PI * t * angularVelocities[i].z));
+			point.setX((point.x + 2 * Math.PI * t * angularVelocities[i].z) % (2 * Math.PI));
 		}
 		geometry.verticesNeedUpdate = true;
 

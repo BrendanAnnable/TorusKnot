@@ -3,7 +3,7 @@
 
 	let canvas = document.getElementById('canvas');
 
-	var random = new Random();
+	let random = new Random();
 
 	let renderer = new THREE.WebGLRenderer({
 		canvas: canvas,
@@ -31,7 +31,7 @@
 									  '-s, c, 0, 0,' +
 									  '0, 0, 1, 0,' +
 									  '0, 0, 0, 1);',
-				'vec4 polar = transform * vec4(0, position.y + distance, position.z, 1.0);', // vec3(distance * cos(position.x), distance * sin(position.x) + position.y, position.z);',
+				'vec4 polar = transform * vec4(0, position.y + distance, position.z, 1.0);',
 				'gl_Position = projectionMatrix * modelViewMatrix * polar;',
 				//'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
 			'}'
@@ -56,13 +56,14 @@
 	let geometry = new THREE.Geometry();
 
 	for (let i = 0; i < n; i++) {
-		var theta = random.uniform(0, 2 * Math.PI);
+		let theta = random.uniform(0, 2 * Math.PI);
 		//let vector = new THREE.Vector3(radius * Math.cos(theta), radius * Math.sin(theta), 0);
-		//var matrix = new THREE.Matrix4().makeTranslation(radius * Math.cos(theta), radius * Math.sin(theta), 0);
+		//let matrix = new THREE.Matrix4().makeTranslation(radius * Math.cos(theta), radius * Math.sin(theta), 0);
 
-		var phi = random.uniform(0, 2 * Math.PI);
-		var distance = random.normal(0.3, 0.02);
-		//var distance = random.uniform(0.2, 1.4);
+		let phi = random.uniform(0, 2 * Math.PI);
+		let mean = 0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
+		let distance = random.normal(mean, 0.005);
+		//let distance = random.uniform(0.2, 1.4);
 		let vector2 = new THREE.Vector3(theta, distance * Math.cos(phi), distance * Math.sin(phi));
 		//vector2.applyMatrix4(new THREE.Matrix4().makeRotationZ(theta));
 		//vector2.add(vector);
@@ -82,7 +83,7 @@
 
 	let clock = new THREE.Clock();
 
-	camera.position.z = 4;
+	camera.position.z = 3.2;
 
 	requestAnimationFrame(render);
 
@@ -99,8 +100,10 @@
 		let vertices = geometry.vertices;
 		for (let i = 0; i < n; i++) {
 			let point = vertices[i];
-			point.applyMatrix4(transform.makeRotationX(2 * Math.PI * t * angularVelocities[i].z));
-			point.setX((point.x + 2 * Math.PI * t * angularVelocities[i].z) % (2 * Math.PI));
+			//point.applyMatrix4(transform.makeRotationX(2 * Math.PI * t * angularVelocities[i].z));
+			point.applyMatrix4(transform.makeRotationX(2 * Math.PI * t / 5));
+			//point.setX((point.x + 2 * Math.PI * t * angularVelocities[i].z) % (2 * Math.PI));
+			point.setX((point.x + 2 * Math.PI * t / 10) % (2 * Math.PI));
 		}
 		geometry.verticesNeedUpdate = true;
 
@@ -110,6 +113,7 @@
 			renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 		}
 
+		//particles.rotation.y = 2.5 * Math.PI / 4;
 		transform.makeRotationY(2 * Math.PI * t / 30);
 		camera.position.applyMatrix4(transform);
 		camera.lookAt(scene.position);

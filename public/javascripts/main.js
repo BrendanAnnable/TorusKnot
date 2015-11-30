@@ -47,7 +47,7 @@
 	material.blendDst = THREE.OneFactor;
 	material.blendEquation = THREE.AddEquation;
 
-	let n = 400000;
+	let n = 200000;
 
 	let geometry = new THREE.Geometry();
 

@@ -20,7 +20,7 @@ vec3 torus_knot(float p, float q, float t) {
 }
 
 void main() {
-	gl_PointSize = 1.0;
+	gl_PointSize = 1.2;
 	float distance = 0.8;
 //	float c = cos(position.x * M_TAU);
 //	float s = sin(position.x * M_TAU);

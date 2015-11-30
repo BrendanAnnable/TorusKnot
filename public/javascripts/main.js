@@ -57,25 +57,12 @@
 
 	for (let i = 0; i < n; i++) {
 		let theta = random.uniform(0, 2 * Math.PI);
-		//let vector = new THREE.Vector3(radius * Math.cos(theta), radius * Math.sin(theta), 0);
-		//let matrix = new THREE.Matrix4().makeTranslation(radius * Math.cos(theta), radius * Math.sin(theta), 0);
-
 		let phi = random.uniform(0, 2 * Math.PI);
 		let mean = 0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
 		let distance = random.normal(mean, 0.005);
-		//let distance = random.uniform(0.2, 1.4);
 		let vector2 = new THREE.Vector3(theta, distance * Math.cos(phi), distance * Math.sin(phi));
-		//vector2.applyMatrix4(new THREE.Matrix4().makeRotationZ(theta));
-		//vector2.add(vector);
 
 		geometry.vertices.push(vector2);
-	}
-
-	let angularVelocities = [];
-	for (let i = 0; i < n; i++) {
-		let vector = new THREE.Vector3(0, 0, random.normal(0.3, 0.05));
-		//let vector = new THREE.Vector3(0, 0, random.random() * 0.5 + 0.5);
-		angularVelocities.push(vector);
 	}
 
 	let particles = new THREE.Points(geometry, material);
@@ -85,13 +72,9 @@
 
 	camera.position.z = 3.2;
 
-	requestAnimationFrame(render);
-
-	function clamp(value) {
-		return Math.min(1, Math.max(-1, value));
-	}
-
 	let transform = new THREE.Matrix4();
+
+	requestAnimationFrame(render);
 
 	function render() {
 		requestAnimationFrame(render);
@@ -100,10 +83,7 @@
 		let vertices = geometry.vertices;
 		for (let i = 0; i < n; i++) {
 			let point = vertices[i];
-			//point.applyMatrix4(transform.makeRotationX(2 * Math.PI * t * angularVelocities[i].z));
 			point.applyMatrix4(transform.makeRotationX(2 * Math.PI * t / 5));
-			//point.setX((point.x + 2 * Math.PI * t * angularVelocities[i].z) % (2 * Math.PI));
-			point.setX((point.x + 2 * Math.PI * t / 10) % (2 * Math.PI));
 		}
 		geometry.verticesNeedUpdate = true;
 
@@ -113,7 +93,6 @@
 			renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 		}
 
-		//particles.rotation.y = 2.5 * Math.PI / 4;
 		transform.makeRotationY(2 * Math.PI * t / 30);
 		camera.position.applyMatrix4(transform);
 		camera.lookAt(scene.position);

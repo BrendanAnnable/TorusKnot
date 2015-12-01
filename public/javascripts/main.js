@@ -118,8 +118,8 @@
 			renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 		}
 
-		particles.rotation.z += Math.TAU * t / 30;
-		particles2.rotation.z += Math.TAU * t / 30;
+		particles.rotation.z += Math.TAU * t / 20;
+		particles2.rotation.z += Math.TAU * t / 20;
 		//transform.makeRotationX(Math.TAU * t / 30);
 		//camera.position.applyMatrix4(transform);
 		//transform.makeRotationY(Math.TAU * t / 30);

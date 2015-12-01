@@ -22,20 +22,6 @@ vec3 torus_knot(float p, float q, float t) {
 void main() {
 	gl_PointSize = 1.0;
 	float distance = 0.8;
-//	float c = cos(position.x * M_TAU);
-//	float s = sin(position.x * M_TAU);
-//	mat4 transform = mat4(c, s, 0, 0,
-//						  -s, c, 0, 0,
-//						  0, 0, 1, 0,
-//						  0, 0, 0, 1);
-//	vec4 polar = transform * vec4(0, position.y + distance, position.z, 1.0);
-//	gl_Position = projectionMatrix * modelViewMatrix * polar;
-
-//	float t = position.x;
-//	float x = sin(t) + 2.0 * sin(2.0 * t);
-//	float y = cos(t) - 2.0 * cos(2.0 * t);
-//	float z = -sin(3.0 * t);
-//	gl_Position = projectionMatrix * modelViewMatrix * vec4(0.3 * vec3(x, y, z), 1.0);
 	t = mod((position.x + (time * M_TAU / 30.0)), M_TAU);
 	float p = 3.0;
 	float q = 8.0;
@@ -50,14 +36,7 @@ void main() {
 
 	mat3 transform = mat3(tangent, bitan, n);
 
-	float c = cos(time * M_TAU / 3.0);
-	float s = sin(time * M_TAU / 3.0);
-	mat3 transform2 = mat3(1, 0, 0,
-						  0, c, -s,
-						  0, s, c);
-
 	vec3 point = transform * vec3(0, position.yz);
 
-		//	point.setX((point.x + 2 * Math.PI * t / 100) % (2 * Math.PI));
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(0.35 * pos + point, 1.0);
 }

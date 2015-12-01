@@ -40,14 +40,14 @@
 		fragmentShader: get('shaders/shader.frag')
 	});
 	material.transparent = true;
-	//material.depthTest = false;
-	//material.depthWrite = false;
+	material.depthTest = false;
+	material.depthWrite = false;
 	material.blending = THREE.CustomBlending;
 	material.blendSrc = THREE.SrcAlphaFactor;
 	material.blendDst = THREE.OneFactor;
 	material.blendEquation = THREE.AddEquation;
 
-	let n = 200000;
+	let n = 1000000;
 
 	let geometry = new THREE.Geometry();
 
@@ -65,7 +65,7 @@
 	let particles = new THREE.Points(geometry, material);
 	scene.add(particles);
 
-	let n2 = 100000;
+	let n2 = 500000;
 
 	let geometry2 = new THREE.Geometry();
 
@@ -87,8 +87,8 @@
 		fragmentShader: get('shaders/shader2.frag')
 	});
 	material2.transparent = true;
-	//material.depthTest = false;
-	//material.depthWrite = false;
+	material.depthTest = false;
+	material.depthWrite = false;
 	material2.blending = THREE.CustomBlending;
 	material2.blendSrc = THREE.SrcAlphaFactor;
 	material2.blendDst = THREE.OneFactor;

@@ -13,5 +13,5 @@ void main() {
 	float r = ((sin(8.0 * (t - M_TAU / 8.0 - (0.2 * time))) + 1.0) / 2.0);
 //	gl_FragColor = vec4(r * vec3(0.2, 0.3, 0.4), 1.0);
 //	gl_FragColor = vec4(0.2, 0.3 * r, 0.4, 1.0);
-	gl_FragColor = vec4(0.2 * r, 0.3 * (1.0 - r), 0.4, 1.0);
+	gl_FragColor = vec4(0.2 * r, 0.3 * (1.0 - r), 0.4, 0.5);
 }

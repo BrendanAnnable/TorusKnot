@@ -10,8 +10,9 @@ varying float t;
 void main() {
 //	float s = t / M_TAU;
 //	gl_FragColor = vec4(0.2, 0.3, 0.4, 1.0);
-	float r = ((sin(8.0 * (t - M_TAU / 8.0 - (0.2 * time))) + 1.0) / 2.0);
+//	float r = ((sin(8.0 * (t - M_TAU / 8.0 - (0.2 * time))) + 1.0) / 2.0);
 //	gl_FragColor = vec4(r * vec3(0.2, 0.3, 0.4), 1.0);
 //	gl_FragColor = vec4(0.2, 0.3 * r, 0.4, 1.0);
-	gl_FragColor = vec4(0.2 * r, 0.3 * (1.0 - r), 0.4, 1.0);
+	float a = sin((t - time) * M_TAU * 2.0);
+	gl_FragColor = vec4(0.2, 0.3, 0.8, a);
 }

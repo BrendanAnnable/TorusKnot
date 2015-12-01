@@ -40,8 +40,8 @@
 		fragmentShader: get('shaders/shader.frag')
 	});
 	material.transparent = true;
-	material.depthTest = false;
-	material.depthWrite = false;
+	//material.depthTest = false;
+	//material.depthWrite = false;
 	material.blending = THREE.CustomBlending;
 	material.blendSrc = THREE.SrcAlphaFactor;
 	material.blendDst = THREE.OneFactor;
@@ -65,6 +65,38 @@
 	let particles = new THREE.Points(geometry, material);
 	scene.add(particles);
 
+	let n2 = 100000;
+
+	let geometry2 = new THREE.Geometry();
+
+	for (let i = 0; i < n2; i++) {
+		let theta = random.uniform(0, 2 * Math.PI);
+		let phi = random.uniform(0, Math.TAU);
+		//let mean = 0.05;//0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
+		let distance = random.normal(0, 0.02);
+		let vector2 = new THREE.Vector3(theta, distance * Math.cos(phi), distance * Math.sin(phi));
+
+		geometry2.vertices.push(vector2);
+	}
+
+	let material2 = new THREE.RawShaderMaterial({
+		uniforms: {
+			time: {type: 'f'}
+		},
+		vertexShader: get('shaders/shader2.vert'),
+		fragmentShader: get('shaders/shader2.frag')
+	});
+	material2.transparent = true;
+	//material.depthTest = false;
+	//material.depthWrite = false;
+	material2.blending = THREE.CustomBlending;
+	material2.blendSrc = THREE.SrcAlphaFactor;
+	material2.blendDst = THREE.OneFactor;
+	material2.blendEquation = THREE.AddEquation;
+
+	let particles2 = new THREE.Points(geometry2, material2);
+	scene.add(particles2);
+
 	let clock = new THREE.Clock();
 
 	camera.position.z = 3.2;
@@ -78,6 +110,7 @@
 		let t = clock.getDelta();
 
 		material.uniforms.time.value = clock.getElapsedTime();
+		material2.uniforms.time.value = clock.getElapsedTime();
 
 		if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
 			camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -86,6 +119,7 @@
 		}
 
 		particles.rotation.z += Math.TAU * t / 30;
+		particles2.rotation.z += Math.TAU * t / 30;
 		//transform.makeRotationX(Math.TAU * t / 30);
 		//camera.position.applyMatrix4(transform);
 		//transform.makeRotationY(Math.TAU * t / 30);

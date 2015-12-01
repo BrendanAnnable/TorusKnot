@@ -103,6 +103,8 @@
 
 	let transform = new THREE.Matrix4();
 
+	let controls = new THREE.OrbitControls(camera);
+
 	requestAnimationFrame(render);
 
 	function render() {
@@ -127,6 +129,7 @@
 		//transform.makeRotationZ(Math.TAU * t / 70);
 		//camera.position.applyMatrix4(transform);
 		camera.lookAt(scene.position);
+		controls.update();
 		renderer.render(scene, camera);
 	}
 }(jQuery, THREE));

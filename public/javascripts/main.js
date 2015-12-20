@@ -105,10 +105,19 @@
 
 	let controls = new THREE.OrbitControls(camera);
 
+	let stats = new Stats();
+	stats.setMode(0);
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.left = '0';
+	stats.domElement.style.top = '0';
+	document.body.appendChild(stats.domElement);
+
 	requestAnimationFrame(render);
 
 	function render() {
 		requestAnimationFrame(render);
+
+		stats.begin();
 		let t = clock.getDelta();
 
 		material.uniforms.time.value = clock.getElapsedTime();
@@ -131,5 +140,6 @@
 		camera.lookAt(scene.position);
 		controls.update();
 		renderer.render(scene, camera);
+		stats.end();
 	}
 }(jQuery, THREE));

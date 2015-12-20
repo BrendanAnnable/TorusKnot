@@ -8,6 +8,9 @@ uniform float time;
 varying float t;
 
 void main() {
-	float a = sin((t - time) * 13.0) * 0.5;
-	gl_FragColor = vec4(0.2, 0.3, 0.8, a);
+	float a = sin((t - time) * 8.0) * 0.5;
+	gl_FragColor = vec4(1.0, 1.0, 0.0, a);
+	gl_FragColor = vec4(0.0, 0.4, 0.1, a);
+//	gl_FragColor = vec4(0.2, 0.6, 0.3, a);
+//	gl_FragColor.a = 0.0;
 }

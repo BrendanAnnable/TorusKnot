@@ -60,13 +60,14 @@ vec3 twisted_torus(float theta, float k) {
 	return vec3(0, from_polar(r, theta));
 }
 
-vec3 twisted_torus_knot(float p, float q, float theta, float k, float time) {
-	float k_offset = mod(k + (time / 256.0), M_TAU);
+vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, float speed) {
+	float k_offset = mod(k + (speed * time / 256.0), M_TAU);
 	vec3 pos = torus_knot(p, q, k_offset);
 	vec3 pos2 = torus_knot(p, q, k_offset - 0.001);
 	vec3 pos3 = torus_knot(p, q, k_offset + 0.001);
 	mat3 frame = frenet_frame(pos2, pos3);
 	mat3 rotation = make_rotation_x(-time * M_TAU / 3.0);
+//	mat3 rotation = make_rotation_x(0.0);
 	vec3 point = pos + frame * rotation * twisted_torus(theta, k_offset);
 	return make_rotation_y(time * M_TAU / 20.0) * point;
 //	return point;
@@ -77,13 +78,14 @@ void main() {
 
 	float theta = position.x;
 	float k = position.y;
+	float speed = position.z * 5.0;
 
 	float p = 2.0;
 	float q = 5.0;
-	vec3 point = twisted_torus_knot(p, q, theta, k, time);
+	vec3 point = twisted_torus_knot(p, q, theta, k, time, speed);
 
-	vec3 theta_dx = twisted_torus_knot(p, q, theta - EPS, k, time) - twisted_torus_knot(p, q, theta + EPS, k, time);
-	vec3 k_dx = twisted_torus_knot(p, q, theta, k - EPS, time) - twisted_torus_knot(p, q, theta, k + EPS, time);
+	vec3 theta_dx = twisted_torus_knot(p, q, theta - EPS, k, time, speed) - twisted_torus_knot(p, q, theta + EPS, k, time, speed);
+	vec3 k_dx = twisted_torus_knot(p, q, theta, k - EPS, time, speed) - twisted_torus_knot(p, q, theta, k + EPS, time, speed);
 
 	vec3 normal = normalize(cross(theta_dx, k_dx));
 

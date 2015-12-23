@@ -55,8 +55,8 @@
 	for (let i = 0; i < n; i++) {
 		let theta = random.uniform(0, Math.TAU);
 		let phi = random.uniform(0, Math.TAU);
-		let delta = random.uniform(0, Math.TAU);
-		//let delta = random.normal(Math.PI, Math.TAU / 3);
+		//let delta = random.uniform(0, Math.TAU);
+		let delta = random.normal(1.0, 0.3);
 		//let mean = 0.05;//0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
 		//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;
 		//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;

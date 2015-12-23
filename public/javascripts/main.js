@@ -40,26 +40,31 @@
 		fragmentShader: get('shaders/shader.frag')
 	});
 	material.transparent = true;
-	material.depthTest = false;
-	material.depthWrite = false;
+	//material.depthTest = false;
+	//material.depthWrite = false;
 	material.blending = THREE.CustomBlending;
 	material.blendSrc = THREE.SrcAlphaFactor;
 	material.blendDst = THREE.OneFactor;
 	material.blendEquation = THREE.AddEquation;
 
 	let n = 1000000;
+	//let n = 1000000;
 
 	let geometry = new THREE.Geometry();
 
 	for (let i = 0; i < n; i++) {
-		let theta = random.uniform(0, 2 * Math.PI);
+		let theta = random.uniform(0, Math.TAU);
 		let phi = random.uniform(0, Math.TAU);
+		let delta = random.uniform(0, Math.TAU);
+		//let delta = random.normal(Math.PI, Math.TAU / 3);
 		//let mean = 0.05;//0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
-		let mean = 0.01 * Math.sin(7 * (phi - 48 * theta)) + 0.10;
-		let distance = random.normal(mean, 0.001);
-		let vector2 = new THREE.Vector3(theta, distance * Math.cos(phi), distance * Math.sin(phi));
+		//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;
+		//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;
+		//let mean = 0.2;
+		//let distance = 0.2;// random.normal(mean, 0.05);
+		let vector = new THREE.Vector3(theta, phi, delta);
 
-		geometry.vertices.push(vector2);
+		geometry.vertices.push(vector);
 	}
 
 	let particles = new THREE.Points(geometry, material);
@@ -73,10 +78,10 @@
 		let theta = random.uniform(0, 2 * Math.PI);
 		let phi = random.uniform(0, Math.TAU);
 		//let mean = 0.05;//0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
-		let distance = random.normal(0, 0.02);
-		let vector2 = new THREE.Vector3(theta, distance * Math.cos(phi), distance * Math.sin(phi));
+		let distance = 0.0; //random.normal(0.3, 0.00);
+		let vector = new THREE.Vector3(theta, distance * Math.cos(phi), distance * Math.sin(phi));
 
-		geometry2.vertices.push(vector2);
+		geometry2.vertices.push(vector);
 	}
 
 	let material2 = new THREE.RawShaderMaterial({
@@ -87,19 +92,19 @@
 		fragmentShader: get('shaders/shader2.frag')
 	});
 	material2.transparent = true;
-	material.depthTest = false;
-	material.depthWrite = false;
+	//material.depthTest = false;
+	//material.depthWrite = false;
 	material2.blending = THREE.CustomBlending;
 	material2.blendSrc = THREE.SrcAlphaFactor;
 	material2.blendDst = THREE.OneFactor;
 	material2.blendEquation = THREE.AddEquation;
 
 	let particles2 = new THREE.Points(geometry2, material2);
-	scene.add(particles2);
+	//scene.add(particles2);
 
 	let clock = new THREE.Clock();
 
-	camera.position.z = 3.2;
+	camera.position.z = 10;
 
 	let transform = new THREE.Matrix4();
 
@@ -129,8 +134,8 @@
 			renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 		}
 
-		particles.rotation.z += Math.TAU * t / 20;
-		particles2.rotation.z += Math.TAU * t / 20;
+		//particles.rotation.z += Math.TAU * t / 20;
+		//particles2.rotation.z += Math.TAU * t / 20;
 		//transform.makeRotationX(Math.TAU * t / 30);
 		//camera.position.applyMatrix4(transform);
 		//transform.makeRotationY(Math.TAU * t / 30);

@@ -6,18 +6,23 @@ precision highp float;
 uniform float time;
 uniform mat4 projectionMatrix;
 uniform mat4 modelViewMatrix;
+uniform mat3 normalMatrix;
 
 attribute vec3 position;
 
-varying float t;
+varying vec3 vPosition;
+varying vec3 vNormal;
 
-vec3 torus_knot(float p, float q, float t) {
-	float qt = q * t;
-	float pt = p * t;
-	float r = cos(qt) + 2.0;
-	float x = r * cos(pt);
-	float y = r * sin(pt);
-	float z = -sin(qt);
+const float EPS = 0.000001;
+
+vec3 torus_knot(float p, float q, float k) {
+	float qk = q * k;
+	float pk = p * k;
+	float r = cos(qk) + 2.0;
+	float x = r * cos(pk);
+	float y = r * sin(pk);
+	float z = -sin(qk);
+//	z = 0.0;
 	return vec3(x, y, z);
 }
 
@@ -28,30 +33,62 @@ mat3 frenet_frame(vec3 a, vec3 b) {
 	return mat3(tangent, binormal, normal);
 }
 
+mat3 make_rotation_y(float angle) {
+	float c = cos(angle);
+	float s = sin(angle);
+	return mat3(c, 0, -s, 0, 1, 0, s, 0, c);
+}
+
 mat3 make_rotation_x(float angle) {
 	float c = cos(angle);
 	float s = sin(angle);
 	return mat3(1, 0, 0, 0, c, -s, 0, s, c);
 }
 
+vec2 from_polar(float r, float angle) {
+	return vec2(r * cos(angle), r * sin(angle));
+}
+
+vec3 twisted_torus(float theta, float k) {
+	float num_bumps = 2.0;
+	float bump_size = 0.05;
+	float torus_radius = 0.2;
+	float num_twists = 64.0;
+	float wave_offset = bump_size * sin(num_bumps * (theta - num_twists * k));
+	float r = torus_radius + wave_offset;
+//	float r = torus_radius;
+	return vec3(0, from_polar(r, theta));
+}
+
+vec3 twisted_torus_knot(float p, float q, float theta, float k, float time) {
+	float k_offset = mod(k + (time / 256.0), M_TAU);
+	vec3 pos = torus_knot(p, q, k_offset);
+	vec3 pos2 = torus_knot(p, q, k_offset - 0.001);
+	vec3 pos3 = torus_knot(p, q, k_offset + 0.001);
+	mat3 frame = frenet_frame(pos2, pos3);
+	mat3 rotation = make_rotation_x(-time * M_TAU / 3.0);
+	vec3 point = pos + frame * rotation * twisted_torus(theta, k_offset);
+	return make_rotation_y(time * M_TAU / 20.0) * point;
+//	return point;
+}
+
 void main() {
 	gl_PointSize = 1.0;
-	float distance = 0.8;
 
-	t = mod((position.x + (time * M_TAU / 100.0)), M_TAU);
+	float theta = position.x;
+	float k = position.y;
 
-	float p = 3.0;
-	float q = 8.0;
-	vec3 pos = torus_knot(p, q, t);
-	vec3 pos2 = torus_knot(p, q, t - 0.001);
-	vec3 pos3 = torus_knot(p, q, t + 0.001);
-	mat3 frame = frenet_frame(pos2, pos3);
+	float p = 2.0;
+	float q = 5.0;
+	vec3 point = twisted_torus_knot(p, q, theta, k, time);
 
-	mat3 rotation = make_rotation_x(time * M_TAU / 3.0);
+	vec3 theta_dx = twisted_torus_knot(p, q, theta - EPS, k, time) - twisted_torus_knot(p, q, theta + EPS, k, time);
+	vec3 k_dx = twisted_torus_knot(p, q, theta, k - EPS, time) - twisted_torus_knot(p, q, theta, k + EPS, time);
 
-	vec3 point = frame * rotation * vec3(0, position.yz);
+	vec3 normal = normalize(cross(theta_dx, k_dx));
 
-		//	point.setX((point.x + 2 * Math.PI * t / 100) % (2 * Math.PI));
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(0.35 * pos + point, 1.0);
-//	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+	vNormal = normalMatrix * normal;
+	vPosition = position;
+
+	gl_Position = projectionMatrix * modelViewMatrix * vec4(point, 1.0);
 }

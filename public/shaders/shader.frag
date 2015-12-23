@@ -16,6 +16,9 @@ void main() {
 	float specular = pow(max(0.0, normal.z), shininess);
 	float lighting = ambient + diffuse + specular;
 	float alpha = max(0.2, vPosition.z / 2.0 + 0.7);
+	if (length(gl_PointCoord * 2.0 - 1.0) > 1.0) {
+		discard;
+	}
 	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, alpha);
 //	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, vPosition.z);
 
@@ -27,6 +30,7 @@ void main() {
 //	gl_FragColor = vec4(0.2 * r, 0.3 * (1.0 - r), 0.4, 0.5);
 //	gl_FragColor = vec4(vec3(max(0.0, vNormal.z)), 1.0);
 //	gl_FragColor = vec4(vNormal, float(normal.z > 0.0));
+//	gl_FragColor = vec4(vNormal, alpha);
 //	gl_FragColor = vec4(0.2, 0.3, 0.4, 1.0);
 //	gl_FragColor = vec4(normal.z);
 //	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);

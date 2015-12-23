@@ -13,7 +13,7 @@ attribute vec3 position;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
-const float EPS = 0.000001;
+const float EPS = 0.00001;
 
 vec3 torus_knot(float p, float q, float k) {
 	float qk = q * k;
@@ -62,6 +62,7 @@ vec3 twisted_torus(float theta, float k) {
 
 vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, float speed) {
 	float k_offset = mod(k + (speed * time / 256.0), M_TAU);
+//	float k_offset = k;
 	vec3 pos = torus_knot(p, q, k_offset);
 	vec3 pos2 = torus_knot(p, q, k_offset - 0.001);
 	vec3 pos3 = torus_knot(p, q, k_offset + 0.001);

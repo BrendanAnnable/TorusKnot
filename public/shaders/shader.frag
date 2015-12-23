@@ -26,7 +26,7 @@ void main() {
 //	gl_FragColor = vec4(0.2, 0.3 * r, 0.4, 1.0);
 //	gl_FragColor = vec4(0.2 * r, 0.3 * (1.0 - r), 0.4, 0.5);
 //	gl_FragColor = vec4(vec3(max(0.0, vNormal.z)), 1.0);
-//	gl_FragColor = vec4(vNormal, 1.0);
+//	gl_FragColor = vec4(vNormal, float(normal.z > 0.0));
 //	gl_FragColor = vec4(0.2, 0.3, 0.4, 1.0);
 //	gl_FragColor = vec4(normal.z);
 //	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);

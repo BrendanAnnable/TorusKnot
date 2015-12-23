@@ -47,7 +47,7 @@
 	material.blendDst = THREE.OneFactor;
 	material.blendEquation = THREE.AddEquation;
 
-	let n = 1000000;
+	let n = 2000000;
 	//let n = 1000000;
 
 	let geometry = new THREE.Geometry();
@@ -104,7 +104,7 @@
 
 	let clock = new THREE.Clock();
 
-	camera.position.z = 10;
+	camera.position.z = 8.5;
 
 	let transform = new THREE.Matrix4();
 

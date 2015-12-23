@@ -5,10 +5,21 @@ precision highp float;
 
 uniform float time;
 
+varying vec3 vParams;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
+vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
 void main() {
+	if (length(gl_PointCoord * 2.0 - 1.0) > 1.0) {
+		discard;
+	}
+
 	vec3 normal = normalize(vNormal);
 	float ambient = 0.1;
 	float diffuse = max(0.0, normal.z);
@@ -16,10 +27,11 @@ void main() {
 	float specular = pow(max(0.0, normal.z), shininess);
 	float lighting = ambient + diffuse + specular;
 	float alpha = max(0.2, vPosition.z / 2.0 + 0.7);
-	if (length(gl_PointCoord * 2.0 - 1.0) > 1.0) {
-		discard;
-	}
-	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, alpha);
+//	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, alpha);
+//	vec3 color = hsv2rgb(vec3(vParams.x / M_TAU, 1.0, 1.0));
+	vec3 color = vec3(0.2, 0.3, 0.4);
+	gl_FragColor = vec4(color * lighting, alpha);
+//	gl_FragColor = vec4(color, 1.0);
 //	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, vPosition.z);
 
 //	float s = t / M_TAU;

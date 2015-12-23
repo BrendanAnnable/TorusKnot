@@ -69,8 +69,8 @@ vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, floa
 	mat3 rotation = make_rotation_x(-time * M_TAU / 3.0);
 //	mat3 rotation = make_rotation_x(0.0);
 	vec3 point = pos + frame * rotation * twisted_torus(theta, k_offset);
-	return make_rotation_y(time * M_TAU / 20.0) * point;
-//	return point;
+//	return make_rotation_y(time * M_TAU / 20.0) * point;
+	return point;
 }
 
 void main() {

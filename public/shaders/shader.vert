@@ -74,8 +74,6 @@ vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, floa
 }
 
 void main() {
-	gl_PointSize = 1.0;
-
 	float theta = position.x;
 	float k = position.y;
 	float speed = position.z * 5.0;
@@ -92,5 +90,11 @@ void main() {
 	vNormal = normalMatrix * normal;
 	vPosition = position;
 
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(point, 1.0);
+	vec4 mvPosition = modelViewMatrix * vec4(point, 1.0);
+
+	float size = 2.0;
+	float scale = 1.0;
+	gl_PointSize = size * (scale / length(mvPosition.xyz));
+
+	gl_Position = projectionMatrix * mvPosition;
 }

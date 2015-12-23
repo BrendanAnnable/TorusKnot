@@ -14,18 +14,7 @@ varying vec3 vParams;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
-const float EPS = 0.00001;
-
-vec3 torus_knot(float radius, float p, float q, float k) {
-	float qk = q * k;
-	float pk = p * k;
-	float r = radius * cos(qk) + 2.0;
-	float x = r * cos(pk);
-	float y = r * sin(pk);
-	float z = radius * -sin(qk);
-//	z = 0.0;
-	return vec3(x, y, z);
-}
+const float EPS = 0.0001;
 
 mat3 frenet_frame(vec3 a, vec3 b) {
 	vec3 tangent = a - b;
@@ -34,20 +23,38 @@ mat3 frenet_frame(vec3 a, vec3 b) {
 	return mat3(tangent, binormal, normal);
 }
 
-mat3 make_rotation_y(float angle) {
-	float c = cos(angle);
-	float s = sin(angle);
-	return mat3(c, 0, -s, 0, 1, 0, s, 0, c);
-}
-
 mat3 make_rotation_x(float angle) {
 	float c = cos(angle);
 	float s = sin(angle);
 	return mat3(1, 0, 0, 0, c, -s, 0, s, c);
 }
 
+mat3 make_rotation_y(float angle) {
+	float c = cos(angle);
+	float s = sin(angle);
+	return mat3(c, 0, -s, 0, 1, 0, s, 0, c);
+}
+
+mat3 make_rotation_z(float angle) {
+	float c = cos(angle);
+	float s = sin(angle);
+	return mat3(c, s, 0, -s, c, 0, 0, 0, 1);
+}
+
 vec2 from_polar(float r, float angle) {
 	return vec2(r * cos(angle), r * sin(angle));
+}
+
+vec3 torus_knot(float radius, float p, float q, float k, float time) {
+	float o = time * M_TAU / 4.0;
+	float qk = q * k - o;
+	float pk = p * k - o;
+	float r = radius * cos(qk) + 2.0;
+	float x = r * cos(pk);
+	float y = r * sin(pk);
+	float z = radius * -sin(qk);
+//	z = 0.0;
+	return vec3(x, y, z);
 }
 
 vec3 twisted_torus(float theta, float k) {
@@ -64,15 +71,16 @@ vec3 twisted_torus(float theta, float k) {
 vec3 twisted_torus_knot(float radius, float p, float q, float theta, float k, float time, float speed) {
 	float k_offset = mod(k + (speed * time / 256.0), M_TAU);
 //	float k_offset = k;
-	vec3 pos = torus_knot(radius, p, q, k_offset);
-	vec3 pos2 = torus_knot(radius, p, q, k_offset - 0.001);
-	vec3 pos3 = torus_knot(radius, p, q, k_offset + 0.001);
+	vec3 pos = torus_knot(radius, p, q, k_offset, time);
+	vec3 pos2 = torus_knot(radius, p, q, k_offset - EPS, time);
+	vec3 pos3 = torus_knot(radius, p, q, k_offset + EPS, time);
 	mat3 frame = frenet_frame(pos2, pos3);
-	mat3 rotation = make_rotation_x(-time * M_TAU / 3.0);
-//	mat3 rotation = make_rotation_x(0.0);
+//	mat3 rotation = make_rotation_x(-time * M_TAU / 3.0);
+	mat3 rotation = make_rotation_x(0.0);
 	vec3 point = pos + frame * rotation * twisted_torus(theta, k_offset);
 //	return make_rotation_y(time * M_TAU / 20.0) * point;
-	return point;
+	return make_rotation_z(time * M_TAU / 4.0) * point;
+//	return point;
 }
 
 void main() {
@@ -96,9 +104,8 @@ void main() {
 	vec4 mvPosition = modelViewMatrix * vec4(point, 1.0);
 //	vec4 mvPosition = modelViewMatrix * vec4(k, from_polar(0.1, theta), 1.0);
 
-	float size = 1.0;
-	float scale = 5.0;
-	gl_PointSize = size * (scale / length(mvPosition.xyz));
+	float size = 4.0;
+	gl_PointSize = size / length(mvPosition.xyz);
 
 //	vPosition = mvPosition.xyz;
 	vPosition = mat3(modelViewMatrix) * point;

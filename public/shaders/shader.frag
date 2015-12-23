@@ -27,9 +27,11 @@ void main() {
 	float specular = pow(max(0.0, normal.z), shininess);
 	float lighting = ambient + diffuse + specular;
 	float alpha = max(0.2, vPosition.z / 2.0 + 0.7);
+//	float alpha = 1.0;
 //	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, alpha);
-//	vec3 color = hsv2rgb(vec3(vParams.x / M_TAU, 1.0, 1.0));
-	vec3 color = vec3(0.2, 0.3, 0.4);
+//	vec3 color = hsv2rgb(vec3(1.0 * (vParams.x * vParams.y) / M_TAU - time / 4.0, 1.0, 1.0));
+	vec3 color = vec3(0.2, 0.3, 0.4) + 0.2;
+//	vec3 color = vec3(0.5, 0.3, 0.7);
 	gl_FragColor = vec4(color * lighting, alpha);
 //	gl_FragColor = vec4(color, 1.0);
 //	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, vPosition.z);

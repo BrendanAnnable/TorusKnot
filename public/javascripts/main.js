@@ -42,13 +42,13 @@
 	material.transparent = true;
 	//material.depthTest = false;
 	//material.depthWrite = false;
-	material.blending = THREE.CustomBlending;
-	material.blendSrc = THREE.SrcAlphaFactor;
-	material.blendDst = THREE.OneFactor;
-	material.blendEquation = THREE.AddEquation;
+	//material.blending = THREE.CustomBlending;
+	//material.blendSrc = THREE.SrcAlphaFactor;
+	//material.blendDst = THREE.OneMinusSrcAlphaFactor;
+	//material.blendEquation = THREE.AddEquation;
 
-	let n = 2000000;
-	//let n = 1000000;
+	//let n = 100000;
+	let n = 1000000;
 
 	let geometry = new THREE.Geometry();
 
@@ -56,7 +56,8 @@
 		let theta = random.uniform(0, Math.TAU);
 		let phi = random.uniform(0, Math.TAU);
 		//let delta = random.uniform(0, Math.TAU);
-		let delta = random.normal(1.0, 0.3);
+		let delta = random.uniform(0, 1);
+		//let delta = random.normal(1.0, 0.3);
 		//let mean = 0.05;//0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
 		//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;
 		//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;

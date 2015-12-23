@@ -10,12 +10,14 @@ varying vec3 vNormal;
 
 void main() {
 	vec3 normal = normalize(vNormal);
-	float ambient = 0.01;
+	float ambient = 0.1;
 	float diffuse = max(0.0, normal.z);
 	float shininess = 10.0;
 	float specular = pow(max(0.0, normal.z), shininess);
 	float lighting = ambient + diffuse + specular;
-	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, 1.0);
+	float alpha = max(0.2, vPosition.z / 2.0 + 0.7);
+	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, alpha);
+//	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, vPosition.z);
 
 //	float s = t / M_TAU;
 //	gl_FragColor = vec4(0.2, 0.3, 0.4, 1.0);

@@ -88,13 +88,16 @@ void main() {
 	vec3 normal = normalize(cross(theta_dx, k_dx));
 
 	vNormal = normalMatrix * normal;
-	vPosition = position;
 
 	vec4 mvPosition = modelViewMatrix * vec4(point, 1.0);
 
-	float size = 2.0;
-	float scale = 1.0;
+	float size = 1.0;
+	float scale = 5.0;
 	gl_PointSize = size * (scale / length(mvPosition.xyz));
+
+//	vPosition = mvPosition.xyz;
+	vPosition = mat3(modelViewMatrix) * point;
+//	vPosition = point;
 
 	gl_Position = projectionMatrix * mvPosition;
 }

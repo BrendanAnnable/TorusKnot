@@ -44,9 +44,9 @@
 	var settings = {
 		'pointSize': 10,
 		'lighting': true,
-		'firstColor': '#6d0cb1',
-		'secondColor': '#0b074a',
-		'thirdColor': '#158c15',
+		'firstColor': '#6300aa',
+		'secondColor': '#000048',
+		'thirdColor': '#0a550a',
 		'shininess': 5,
 		'epsilon': 1E-3,
 		'tubeRadius': 0.18,
@@ -54,7 +54,7 @@
 		'numBumps': 3,
 		'bumpSize': 0.04,
 		'bumpShift': 5,
-		'numTwists': 82,
+		'numTwists': 64,
 		'numCoils': 3,
 		'numLoops': 8,
 		'spinningSpeed': 1 / 4

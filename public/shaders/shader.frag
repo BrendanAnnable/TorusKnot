@@ -70,7 +70,8 @@ void main() {
 //	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, alpha);
 //	vec3 color = hsv2rgb(vec3(1.0 * (vParams.x - 64.0 * vParams.y - M_TAU / 4.0) / M_TAU, 1.0, 1.0));
 //	float w = (vParams.x - 64.0 * vParams.y - M_TAU / 4.0) / M_TAU;
-	float w = (vParams.x - numTwists * vParams.y + M_TAU / 4.0) / M_TAU;
+//	float w = (vParams.x - numTwists * vParams.y + M_TAU / 4.0) / M_TAU;
+	float w = (vParams.x - numTwists * vParams.y) / M_TAU;
 //	float w = (vParams.x - 82.0 * vParams.y) / M_TAU;
 //	float w = vParams.y / M_TAU;
 //	vec3 color = mix3(hex2rgb(0xaaaaaa), hex2rgb(0x690000), hex2rgb(0x009900), w);

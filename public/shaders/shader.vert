@@ -9,7 +9,8 @@ uniform mat4 modelViewMatrix;
 uniform mat3 normalMatrix;
 uniform float pointSize;
 uniform float epsilon;
-uniform float torusRadius;
+uniform float torusKnotRadius;
+uniform float tubeRadius;
 uniform float numBumps;
 uniform float bumpSize;
 uniform float numTwists;
@@ -59,17 +60,17 @@ vec3 torus_knot(float p, float q, float k, float time) {
 //	o = 0.0;
 	float qk = q * k - o;
 	float pk = p * k - o;
-	float r = cos(qk) + 2.0;
+	float r = torusKnotRadius * cos(qk) + 2.0;
 	float x = r * cos(pk);
 	float y = r * sin(pk);
-	float z = -sin(qk);
+	float z = torusKnotRadius * -sin(qk);
 //	z = 0.0;
 	return vec3(x, y, z);
 }
 
 vec3 twisted_torus(float theta, float k) {
 	float wave_offset = bumpSize * sin(numBumps * (theta - numTwists * k));
-	float r = torusRadius + wave_offset;
+	float r = tubeRadius + wave_offset;
 //	float r = torus_radius;
 	return vec3(0, from_polar(r, theta));
 }

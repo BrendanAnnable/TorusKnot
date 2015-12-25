@@ -49,7 +49,8 @@
 		'thirdColor': '#222222',
 		'shininess': 5,
 		'epsilon': 1E-3,
-		'torusRadius': 0.18,
+		'tubeRadius': 0.18,
+		'torusKnotRadius': 1,
 		'numBumps': 3,
 		'bumpSize': 0.04,
 		'numTwists': 82,
@@ -67,7 +68,8 @@
 			secondColor: {type: '4f', value: new THREE.Color(settings.secondColor).toArray()},
 			thirdColor: {type: '4f', value: new THREE.Color(settings.thirdColor).toArray()},
 			shininess: {type: 'f', value: settings.shininess},
-			torusRadius: {type: 'f', value: settings.torusRadius},
+			tubeRadius: {type: 'f', value: settings.tubeRadius},
+			torusKnotRadius: {type: 'f', value: settings.torusKnotRadius},
 			numBumps: {type: 'f', value: settings.numBumps},
 			bumpSize: {type: 'f', value: settings.bumpSize},
 			numTwists: {type: 'f', value: settings.numTwists},
@@ -103,8 +105,11 @@
 	gui.add(settings, 'numTwists', 0, 256).step(1).onChange(function (value) {
 		material.uniforms.numTwists.value = value;
 	});
-	gui.add(settings, 'torusRadius', 0, 1).onChange(function (value) {
-		material.uniforms.torusRadius.value = value;
+	gui.add(settings, 'tubeRadius', 0, 1).onChange(function (value) {
+		material.uniforms.tubeRadius.value = value;
+	});
+	gui.add(settings, 'torusKnotRadius', 0, 2).onChange(function (value) {
+		material.uniforms.torusKnotRadius.value = value;
 	});
 	gui.add(settings, 'shininess', 0, 5).onChange(function (value) {
 		material.uniforms.shininess.value = value;

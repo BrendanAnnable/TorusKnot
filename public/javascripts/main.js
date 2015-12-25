@@ -19,6 +19,15 @@
 
 	let canvas = document.getElementById('canvas');
 
+	let stats = new Stats();
+	stats.setMode(0);
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.left = '0';
+	stats.domElement.style.top = '0';
+	document.body.appendChild(stats.domElement);
+
+	var gui = new dat.GUI();
+
 	let random = new Random();
 
 	let renderer = new THREE.WebGLRenderer({
@@ -32,9 +41,39 @@
 	let camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
 	//let camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1000);
 
+	var settings = {
+		'pointSize': 1,
+		'lighting': true,
+		'firstColor': '#ffffff',
+		'secondColor': '#ff0000',
+		'thirdColor': '#222222',
+		'shininess': 5,
+		'epsilon': 1E-3,
+		'torusRadius': 0.18,
+		'numBumps': 3,
+		'bumpSize': 0.04,
+		'numTwists': 82,
+		'numCoils': 3,
+		'numLoops': 8,
+		'spinningSpeed': 4
+	};
 	let material = new THREE.RawShaderMaterial({
 		uniforms: {
-			time: {type: 'f'}
+			time: {type: 'f'},
+			epsilon: {type: 'f', value: settings.epsilon},
+			pointSize: {type: 'f', value: settings.pointSize},
+			uLighting: {type: 'f', value: settings.lighting},
+			firstColor: {type: '4f', value: new THREE.Color(settings.firstColor).toArray()},
+			secondColor: {type: '4f', value: new THREE.Color(settings.secondColor).toArray()},
+			thirdColor: {type: '4f', value: new THREE.Color(settings.thirdColor).toArray()},
+			shininess: {type: 'f', value: settings.shininess},
+			torusRadius: {type: 'f', value: settings.torusRadius},
+			numBumps: {type: 'f', value: settings.numBumps},
+			bumpSize: {type: 'f', value: settings.bumpSize},
+			numTwists: {type: 'f', value: settings.numTwists},
+			numCoils: {type: 'f', value: settings.numCoils},
+			numLoops: {type: 'f', value: settings.numLoops},
+			spinningSpeed: {type: 'f', value: settings.spinningSpeed}
 		},
 		vertexShader: get('shaders/shader.vert'),
 		fragmentShader: get('shaders/shader.frag')
@@ -46,6 +85,48 @@
 	//material.blendSrc = THREE.SrcAlphaFactor;
 	//material.blendDst = THREE.OneMinusSrcAlphaFactor;
 	//material.blendEquation = THREE.AddEquation;
+	gui.add(settings, 'spinningSpeed', 0, 10).onChange(function (value) {
+		material.uniforms.spinningSpeed.value = value;
+	});
+	gui.add(settings, 'pointSize', 1, 100).onChange(function (value) {
+		material.uniforms.pointSize.value = value;
+	});
+	gui.add(settings, 'lighting').onChange(function (value) {
+		material.uniforms.uLighting.value = value;
+	});
+	gui.add(settings, 'numBumps', 0, 10).step(1).onChange(function (value) {
+		material.uniforms.numBumps.value = value;
+	});
+	gui.add(settings, 'bumpSize', 0.001, 0.2).onChange(function (value) {
+		material.uniforms.bumpSize.value = value;
+	});
+	gui.add(settings, 'numTwists', 0, 256).step(1).onChange(function (value) {
+		material.uniforms.numTwists.value = value;
+	});
+	gui.add(settings, 'torusRadius', 0, 1).onChange(function (value) {
+		material.uniforms.torusRadius.value = value;
+	});
+	gui.add(settings, 'shininess', 0, 5).onChange(function (value) {
+		material.uniforms.shininess.value = value;
+	});
+	gui.add(settings, 'numLoops', 1, 20).step(1).onChange(function (value) {
+		material.uniforms.numLoops.value = value;
+	});
+	gui.add(settings, 'numCoils', 1, 10).step(1).onChange(function (value) {
+		material.uniforms.numCoils.value = value;
+	});
+	gui.add(settings, 'epsilon', 1E-3, 1).onChange(function (value) {
+		material.uniforms.epsilon.value = value;
+	});
+	gui.addColor(settings, 'firstColor').onChange(function (value) {
+		material.uniforms.firstColor.value = new THREE.Color(value).toArray();
+	});
+	gui.addColor(settings, 'secondColor').onChange(function (value) {
+		material.uniforms.secondColor.value = new THREE.Color(value).toArray();
+	});
+	gui.addColor(settings, 'thirdColor').onChange(function (value) {
+		material.uniforms.thirdColor.value = new THREE.Color(value).toArray();
+	});
 
 	//let n = 100000;
 	let n = 1000000;
@@ -109,14 +190,8 @@
 
 	let transform = new THREE.Matrix4();
 
-	let controls = new THREE.OrbitControls(camera);
+	let controls = new THREE.OrbitControls(camera, canvas);
 
-	let stats = new Stats();
-	stats.setMode(0);
-	stats.domElement.style.position = 'absolute';
-	stats.domElement.style.left = '0';
-	stats.domElement.style.top = '0';
-	document.body.appendChild(stats.domElement);
 
 	requestAnimationFrame(render);
 

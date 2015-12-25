@@ -42,11 +42,11 @@
 	//let camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1000);
 
 	var settings = {
-		'pointSize': 1,
+		'pointSize': 10,
 		'lighting': true,
-		'firstColor': '#ffffff',
-		'secondColor': '#ff0000',
-		'thirdColor': '#222222',
+		'firstColor': '#6d0cb1',
+		'secondColor': '#0b074a',
+		'thirdColor': '#158c15',
 		'shininess': 5,
 		'epsilon': 1E-3,
 		'tubeRadius': 0.18,

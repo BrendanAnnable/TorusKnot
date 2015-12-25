@@ -57,7 +57,7 @@ vec2 from_polar(float r, float angle) {
 }
 
 vec3 torus_knot(float p, float q, float k, float time) {
-	float o = time * M_TAU / spinningSpeed;
+	float o = spinningSpeed * time * M_TAU;
 //	o = 0.0;
 	float qk = q * k - o;
 	float pk = p * k - o;
@@ -85,11 +85,11 @@ vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, floa
 	vec3 pos2 = torus_knot(p, q, k_offset - epsilon, time);
 	vec3 pos3 = torus_knot(p, q, k_offset + epsilon, time);
 	mat3 frame = frenet_frame(pos2, pos3);
-	mat3 rotation = make_rotation_x(-time * M_TAU / spinningSpeed);
+	mat3 rotation = make_rotation_x(spinningSpeed * -time * M_TAU);
 //	mat3 rotation = make_rotation_x(0.0);
 	vec3 point = pos + frame * rotation * twisted_torus(theta, k_offset);
 //	return make_rotation_y(time * M_TAU / 20.0) * point;
-	return make_rotation_z(time * M_TAU / spinningSpeed) * point;
+	return make_rotation_z(spinningSpeed * time * M_TAU) * point;
 //	return point;
 }
 

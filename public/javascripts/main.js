@@ -53,11 +53,11 @@
 		'torusKnotRadius': 1,
 		'numBumps': 3,
 		'bumpSize': 0.04,
-		'bumpShift': 10,
+		'bumpShift': 5,
 		'numTwists': 82,
 		'numCoils': 3,
 		'numLoops': 8,
-		'spinningSpeed': 4
+		'spinningSpeed': 1 / 4
 	};
 	let material = new THREE.RawShaderMaterial({
 		uniforms: {
@@ -89,7 +89,7 @@
 	//material.blendSrc = THREE.SrcAlphaFactor;
 	//material.blendDst = THREE.OneMinusSrcAlphaFactor;
 	//material.blendEquation = THREE.AddEquation;
-	gui.add(settings, 'spinningSpeed', 0, 10).onChange(function (value) {
+	gui.add(settings, 'spinningSpeed', 0, 1).onChange(function (value) {
 		material.uniforms.spinningSpeed.value = value;
 	});
 	gui.add(settings, 'pointSize', 1, 100).onChange(function (value) {

@@ -53,6 +53,7 @@
 		'torusKnotRadius': 1,
 		'numBumps': 3,
 		'bumpSize': 0.04,
+		'bumpShift': 10,
 		'numTwists': 82,
 		'numCoils': 3,
 		'numLoops': 8,
@@ -71,6 +72,7 @@
 			tubeRadius: {type: 'f', value: settings.tubeRadius},
 			torusKnotRadius: {type: 'f', value: settings.torusKnotRadius},
 			numBumps: {type: 'f', value: settings.numBumps},
+			bumpShift: {type: 'f', value: settings.bumpShift},
 			bumpSize: {type: 'f', value: settings.bumpSize},
 			numTwists: {type: 'f', value: settings.numTwists},
 			numCoils: {type: 'f', value: settings.numCoils},
@@ -101,6 +103,9 @@
 	});
 	gui.add(settings, 'bumpSize', 0.001, 0.2).onChange(function (value) {
 		material.uniforms.bumpSize.value = value;
+	});
+	gui.add(settings, 'bumpShift', 2, 30).onChange(function (value) {
+		material.uniforms.bumpShift.value = value;
 	});
 	gui.add(settings, 'numTwists', 0, 256).step(1).onChange(function (value) {
 		material.uniforms.numTwists.value = value;

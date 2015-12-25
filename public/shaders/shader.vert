@@ -13,6 +13,7 @@ uniform float torusKnotRadius;
 uniform float tubeRadius;
 uniform float numBumps;
 uniform float bumpSize;
+uniform float bumpShift;
 uniform float numTwists;
 uniform float numCoils;
 uniform float numLoops;
@@ -69,10 +70,12 @@ vec3 torus_knot(float p, float q, float k, float time) {
 }
 
 vec3 twisted_torus(float theta, float k) {
-	float wave_offset = bumpSize * sin(numBumps * (theta - numTwists * k));
-	float r = tubeRadius + wave_offset;
-//	float r = torus_radius;
-	return vec3(0, from_polar(r, theta));
+//	float wave_offset = bumpSize * sin(numBumps * (theta - numTwists * k));
+//	float r = tubeRadius + wave_offset;
+	float t = theta - numTwists * k;
+	float r = tubeRadius + bumpSize * cos(numBumps * t);
+	float a = sin(2.0 * numBumps * t) / bumpShift + theta;
+	return vec3(0, from_polar(r, a));
 }
 
 vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, float speed) {
@@ -87,7 +90,7 @@ vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, floa
 	vec3 point = pos + frame * rotation * twisted_torus(theta, k_offset);
 //	return make_rotation_y(time * M_TAU / 20.0) * point;
 	return make_rotation_z(time * M_TAU / spinningSpeed) * point;
-	return point;
+//	return point;
 }
 
 void main() {

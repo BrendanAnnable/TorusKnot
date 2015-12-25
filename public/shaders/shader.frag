@@ -64,7 +64,7 @@ void main() {
 	float diffuse = max(0.0, normal.z);
 	float specular = pow(max(0.0, normal.z), shininess);
 	float lighting = max(1.0 - uLighting, ambient + diffuse + specular);
-	float alpha = max(0.2, vPosition.z / 2.0 + 0.7);
+	float alpha = max(1.0 - uLighting, max(0.2, vPosition.z / 2.0 + 0.7));
 //	lighting = 1.0;
 //	alpha = 1.0;
 //	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, alpha);

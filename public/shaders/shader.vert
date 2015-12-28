@@ -73,8 +73,8 @@ vec3 twisted_torus(float theta, float k) {
 //	float wave_offset = bumpSize * sin(numBumps * (theta - numTwists * k));
 //	float r = tubeRadius + wave_offset;
 	float t = theta - numTwists * k;
-	float r = tubeRadius + bumpSize * cos(numBumps * t);
-	float a = sin(2.0 * numBumps * t) / bumpShift + theta;
+	float r = max(epsilon, tubeRadius + bumpSize * cos(numBumps * t));
+	float a = sin(2.0 * numBumps * t) * bumpShift + theta;
 	return vec3(0, from_polar(r, a));
 }
 

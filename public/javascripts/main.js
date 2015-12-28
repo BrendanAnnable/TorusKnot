@@ -51,7 +51,7 @@
 		'torusKnotRadius': 1,
 		'numBumps': 3,
 		'bumpSize': 0.04,
-		'bumpShift': 5,
+		'bumpShift': 1 / 5,
 		'numTwists': 64,
 		'numCoils': 3,
 		'numLoops': 8,
@@ -100,7 +100,7 @@
 	gui.add(settings, 'bumpSize', 0.001, 0.2).onChange(function (value) {
 		material.uniforms.bumpSize.value = value;
 	});
-	gui.add(settings, 'bumpShift', 2, 30).onChange(function (value) {
+	gui.add(settings, 'bumpShift', 0, 1).onChange(function (value) {
 		material.uniforms.bumpShift.value = value;
 	});
 	gui.add(settings, 'numTwists', 0, 256).step(1).onChange(function (value) {

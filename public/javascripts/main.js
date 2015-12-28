@@ -44,9 +44,9 @@
 	var settings = {
 		'pointSize': 10,
 		'lighting': true,
-		'firstColor': '#6300aa',
-		'secondColor': '#000048',
-		'thirdColor': '#0a550a',
+		'firstColor': '#2d054a',
+		'secondColor': '#0a002a',
+		'thirdColor': '#002a00',
 		'shininess': 5,
 		'epsilon': 1E-3,
 		'tubeRadius': 0.18,
@@ -92,9 +92,9 @@
 	gui.add(settings, 'spinningSpeed', 0, 1).onChange(function (value) {
 		material.uniforms.spinningSpeed.value = value;
 	});
-	gui.add(settings, 'pointSize', 1, 100).onChange(function (value) {
-		material.uniforms.pointSize.value = value;
-	});
+	//gui.add(settings, 'pointSize', 1, 100).onChange(function (value) {
+	//	material.uniforms.pointSize.value = value;
+	//});
 	gui.add(settings, 'lighting').onChange(function (value) {
 		material.uniforms.uLighting.value = value;
 	});
@@ -125,9 +125,9 @@
 	gui.add(settings, 'numCoils', 1, 10).step(1).onChange(function (value) {
 		material.uniforms.numCoils.value = value;
 	});
-	gui.add(settings, 'epsilon', 1E-3, 1).onChange(function (value) {
-		material.uniforms.epsilon.value = value;
-	});
+	//gui.add(settings, 'epsilon', 1E-3, 1).onChange(function (value) {
+	//	material.uniforms.epsilon.value = value;
+	//});
 	gui.addColor(settings, 'firstColor').onChange(function (value) {
 		material.uniforms.firstColor.value = new THREE.Color(value).toArray();
 	});
@@ -139,27 +139,33 @@
 	});
 
 	//let n = 100000;
-	let n = 1000000;
+	//let n = 1000000;
+	//
+	//let geometry = new THREE.Geometry();
+	//
+	//for (let i = 0; i < n; i++) {
+	//	let theta = random.uniform(0, Math.TAU);
+	//	let phi = random.uniform(0, Math.TAU);
+	//	//let delta = random.uniform(0, Math.TAU);
+	//	let delta = random.uniform(0, 1);
+	//	//let delta = random.normal(1.0, 0.3);
+	//	//let mean = 0.05;//0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
+	//	//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;
+	//	//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;
+	//	//let mean = 0.2;
+	//	//let distance = 0.2;// random.normal(mean, 0.05);
+	//	let vector = new THREE.Vector3(theta, phi, delta);
+	//
+	//	geometry.vertices.push(vector);
+	//}
 
-	let geometry = new THREE.Geometry();
+	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 100, 15000);
 
-	for (let i = 0; i < n; i++) {
-		let theta = random.uniform(0, Math.TAU);
-		let phi = random.uniform(0, Math.TAU);
-		//let delta = random.uniform(0, Math.TAU);
-		let delta = random.uniform(0, 1);
-		//let delta = random.normal(1.0, 0.3);
-		//let mean = 0.05;//0.05 * Math.sin(7 * (phi - 4 * theta)) + 0.3;
-		//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;
-		//let mean = 0.01 * Math.sin(7 * (phi - 16 * theta)) + 0.20;
-		//let mean = 0.2;
-		//let distance = 0.2;// random.normal(mean, 0.05);
-		let vector = new THREE.Vector3(theta, phi, delta);
-
-		geometry.vertices.push(vector);
-	}
-
-	let particles = new THREE.Points(geometry, material);
+	let particles = new THREE.Mesh(geometry, material);
+	//let particles = new THREE.Line(geometry, material);
+	//let particles = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+	//	side: THREE.DoubleSide
+	//}));
 	scene.add(particles);
 
 	let n2 = 500000;

@@ -94,6 +94,7 @@ vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, floa
 }
 
 void main() {
+
 	vParams = position;
 	float theta = position.x;
 	float k = position.y;
@@ -112,8 +113,9 @@ void main() {
 
 	vec4 mvPosition = modelViewMatrix * vec4(point, 1.0);
 //	vec4 mvPosition = modelViewMatrix * vec4(k, from_polar(0.1, theta), 1.0);
+//	vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
 
-	gl_PointSize = pointSize / length(mvPosition.xyz);
+//	gl_PointSize = pointSize / length(mvPosition.xyz);
 
 //	vPosition = mvPosition.xyz;
 	vPosition = mat3(modelViewMatrix) * point;

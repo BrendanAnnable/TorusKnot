@@ -55,18 +55,19 @@ vec3 mix3(vec3 a, vec3 b, vec3 c, float t) {
 }
 
 void main() {
-	if (length(gl_PointCoord * 2.0 - 1.0) > 1.0) {
-		discard;
-	}
+//	if (length(gl_PointCoord * 2.0 - 1.0) > 1.0) {
+//		discard;
+//	}
 
 	vec3 normal = normalize(vNormal);
 	float ambient = 0.1;
 	float diffuse = max(0.0, normal.z);
 	float specular = pow(max(0.0, normal.z), shininess);
 	float lighting = max(1.0 - uLighting, ambient + diffuse + specular);
-	float alpha = max(1.0 - uLighting, max(0.2, vPosition.z / 2.0 + 0.7));
+	lighting *= max(1.0 - uLighting, max(0.2, vPosition.z / 2.0 + 0.7));
+//	float alpha = max(1.0 - uLighting, max(0.2, vPosition.z / 2.0 + 0.7));
 //	lighting = 1.0;
-//	alpha = 1.0;
+	float alpha = 1.0;
 //	gl_FragColor = vec4(vec3(0.2, 0.3, 0.4) * lighting, alpha);
 //	vec3 color = hsv2rgb(vec3(1.0 * (vParams.x - 64.0 * vParams.y - M_TAU / 4.0) / M_TAU, 1.0, 1.0));
 //	float w = (vParams.x - 64.0 * vParams.y - M_TAU / 4.0) / M_TAU;
@@ -93,8 +94,9 @@ void main() {
 //	gl_FragColor = vec4(vec3(max(0.0, vNormal.z)), 1.0);
 //	gl_FragColor = vec4(vNormal, float(normal.z > 0.0));
 //	gl_FragColor = vec4(vNormal, alpha);
+//	gl_FragColor = vec4(vNormal, 1.0);
 //	gl_FragColor = vec4(0.2, 0.3, 0.4, 1.0);
-//	gl_FragColor = vec4(normal.z);
+////	gl_FragColor = vec4(normal.z);
 //	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 //	gl_FragColor = vec4(0.2, 0.3, 0.4, t / M_TAU);
 }

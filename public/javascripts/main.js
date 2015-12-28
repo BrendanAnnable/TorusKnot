@@ -42,7 +42,7 @@
 	var settings = {
 		'pointSize': 10,
 		'lighting': true,
-		'firstColor': '#2d054a',
+		'firstColor': '#7a7a7a',
 		'secondColor': '#0a002a',
 		'thirdColor': '#002a00',
 		'shininess': 5,
@@ -51,11 +51,11 @@
 		'torusKnotRadius': 1,
 		'numBumps': 3,
 		'bumpSize': 0.04,
-		'bumpShift': 1 / 5,
+		'bumpShift': 1 / 2,
 		'numTwists': 64,
 		'numCoils': 3,
 		'numLoops': 8,
-		'spinningSpeed': 1 / 4,
+		'spinningSpeed': 1 / 5,
 		'normals': false
 	};
 	let material = new THREE.RawShaderMaterial({
@@ -94,9 +94,6 @@
 	gui.add(settings, 'normals').onChange(function (value) {
 		material.uniforms.normals.value = value;
 	});
-	gui.add(settings, 'numBumps', 0, 10).step(1).onChange(function (value) {
-		material.uniforms.numBumps.value = value;
-	});
 	gui.add(settings, 'bumpSize', 0.001, 0.2).onChange(function (value) {
 		material.uniforms.bumpSize.value = value;
 	});
@@ -112,14 +109,17 @@
 	gui.add(settings, 'torusKnotRadius', 0, 2).onChange(function (value) {
 		material.uniforms.torusKnotRadius.value = value;
 	});
-	gui.add(settings, 'shininess', 0, 5).onChange(function (value) {
-		material.uniforms.shininess.value = value;
+	gui.add(settings, 'numBumps', 0, 10).step(1).onChange(function (value) {
+		material.uniforms.numBumps.value = value;
 	});
 	gui.add(settings, 'numLoops', 1, 20).step(1).onChange(function (value) {
 		material.uniforms.numLoops.value = value;
 	});
 	gui.add(settings, 'numCoils', 1, 10).step(1).onChange(function (value) {
 		material.uniforms.numCoils.value = value;
+	});
+	gui.add(settings, 'shininess', 0, 5).onChange(function (value) {
+		material.uniforms.shininess.value = value;
 	});
 	//gui.add(settings, 'epsilon', 1E-3, 1).onChange(function (value) {
 	//	material.uniforms.epsilon.value = value;

@@ -12,7 +12,7 @@ uniform vec4 thirdColor;
 uniform float shininess;
 uniform float numBumps;
 uniform float numTwists;
-uniform float uLighting;
+uniform bool uLighting;
 uniform bool normals;
 
 varying vec3 vParams;
@@ -57,18 +57,24 @@ vec3 mix3(vec3 a, vec3 b, vec3 c, float t) {
 
 void main() {
 	vec3 normal = normalize(vNormal);
+
+	if (normals) {
+		gl_FragColor = vec4(normal, 1.0);
+		return;
+	}
+
 	float ambient = 0.1;
 	float diffuse = max(0.0, normal.z);
 	float specular = pow(max(0.0, normal.z), shininess);
-	float lighting = max(1.0 - uLighting, ambient + diffuse + specular);
+	float lighting = ambient + diffuse + specular;
 
-	lighting *= max(1.0 - uLighting, max(0.2, vPosition.z / 2.0 + 0.7));
+	lighting *= max(0.2, vPosition.z / 2.0 + 0.7);
 
-	float w = (vParams.x - numTwists * vParams.y) / M_TAU;
-	vec3 color = mix3(firstColor.xyz, secondColor.xyz, thirdColor.xyz, w);
-	gl_FragColor = vec4(color * lighting, 1.0);
+	vec3 color = mix3(firstColor.xyz, secondColor.xyz, thirdColor.xyz, (vParams.x - numTwists * vParams.y) / M_TAU);
 
-	if (normals) {
-		gl_FragColor = vec4(vNormal, 1.0);
+	if (uLighting) {
+		color *= lighting;
 	}
+
+	gl_FragColor = vec4(color, 1.0);
 }

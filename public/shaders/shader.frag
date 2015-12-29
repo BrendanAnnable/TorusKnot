@@ -83,14 +83,16 @@ void main() {
 	float k = (numBumps * vParams.x / numColors) / M_TAU;
 	vec3 color = mix3(firstColor.xyz, secondColor.xyz, thirdColor.xyz, k);
 
+	if (!debugLighting) {
+		lighting *= max(0.2, vPosition.z / 2.0 + 0.7);
+	}
+
 	if (uLighting) {
 		color *= lighting;
 	}
 
 	if (debugLighting) {
 		color = vec3(lighting);
-	} else {
-		lighting *= max(0.2, vPosition.z / 2.0 + 0.7);
 	}
 
 	gl_FragColor = vec4(color, 1.0);

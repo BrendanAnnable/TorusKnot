@@ -62,6 +62,8 @@ vec3 mix3(vec3 a, vec3 b, vec3 c, float t) {
 void main() {
 	vec3 normal = normalize(vNormal);
 
+	normal.z += 0.04 * sin(32.0 * numBumps * vParams.x);
+
 	if (debugNormals) {
 		gl_FragColor = vec4(normal, 1.0);
 		return;

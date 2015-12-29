@@ -69,7 +69,8 @@
 		'numTwists': 64,
 		'numCoils': 3,
 		'numLoops': 8,
-		'spinningSpeed': 1 / 5
+		'spinningSpeed': 1 / 5,
+		'wireframe': false
 	};
 	let material = new THREE.RawShaderMaterial({
 		uniforms: {
@@ -147,6 +148,9 @@
 
 	var debug = gui.addFolder('Debug');
 	debug.open();
+	debug.add(settings, 'wireframe').onChange(function (value) {
+		material.wireframe = value;
+	});
 	debug.add(settings, 'ambient').onChange(function (value) {
 		material.uniforms.uAmbient.value = value;
 	});
@@ -195,4 +199,6 @@
 		stats.end();
 		rendererStats.update(renderer);
 	}
+
+	window.renderer = renderer;
 }(jQuery, THREE));

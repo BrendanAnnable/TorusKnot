@@ -48,13 +48,18 @@
 	var settings = {
 		'pointSize': 10,
 		'lighting': true,
+		'ambient': true,
+		'diffuse': true,
+		'specular': true,
+		'debugLighting': false,
+		'debugNormals': false,
 		'firstColor': '#7a7a7a',
 		//'firstColor': '#ff0000',
 		'secondColor': '#0a002a',
 		//'secondColor': '#00ff00',
 		'thirdColor': '#002a00',
 		//'thirdColor': '#0000ff',
-		'shininess': 40,
+		'shininess': 30,
 		'epsilon': 1E-2,
 		'tubeRadius': 0.18,
 		'torusKnotRadius': 1,
@@ -64,8 +69,7 @@
 		'numTwists': 64,
 		'numCoils': 3,
 		'numLoops': 8,
-		'spinningSpeed': 1 / 5,
-		'normals': false
+		'spinningSpeed': 1 / 5
 	};
 	let material = new THREE.RawShaderMaterial({
 		uniforms: {
@@ -73,6 +77,10 @@
 			epsilon: {type: 'f', value: settings.epsilon},
 			pointSize: {type: 'f', value: settings.pointSize},
 			uLighting: {type: 'f', value: settings.lighting},
+			debugLighting: {type: 'f', value: settings.debugLighting},
+			uAmbient: {type: 'f', value: settings.ambient},
+			uDiffuse: {type: 'f', value: settings.diffuse},
+			uSpecular: {type: 'f', value: settings.specular},
 			firstColor: {type: '4f', value: new THREE.Color(settings.firstColor).toArray()},
 			secondColor: {type: '4f', value: new THREE.Color(settings.secondColor).toArray()},
 			thirdColor: {type: '4f', value: new THREE.Color(settings.thirdColor).toArray()},
@@ -86,10 +94,13 @@
 			numCoils: {type: 'f', value: settings.numCoils},
 			numLoops: {type: 'f', value: settings.numLoops},
 			spinningSpeed: {type: 'f', value: settings.spinningSpeed},
-			normals: {type: 'i', value: settings.normals}
+			debugNormals: {type: 'i', value: settings.debugNormals}
 		},
 		vertexShader: get('shaders/shader.vert'),
 		fragmentShader: get('shaders/shader.frag')
+	});
+	gui.add(settings, 'lighting').onChange(function (value) {
+		material.uniforms.uLighting.value = value;
 	});
 	gui.add(settings, 'spinningSpeed', 0, 1).onChange(function (value) {
 		material.uniforms.spinningSpeed.value = value;
@@ -97,17 +108,14 @@
 	//gui.add(settings, 'pointSize', 1, 100).onChange(function (value) {
 	//	material.uniforms.pointSize.value = value;
 	//});
-	gui.add(settings, 'lighting').onChange(function (value) {
-		material.uniforms.uLighting.value = value;
-	});
-	gui.add(settings, 'normals').onChange(function (value) {
-		material.uniforms.normals.value = value;
-	});
 	gui.add(settings, 'bumpSize', 0.001, 0.2).onChange(function (value) {
 		material.uniforms.bumpSize.value = value;
 	});
 	gui.add(settings, 'bumpShift', 0, 1).onChange(function (value) {
 		material.uniforms.bumpShift.value = value;
+	});
+	gui.add(settings, 'numBumps', 0, 10).step(1).onChange(function (value) {
+		material.uniforms.numBumps.value = value;
 	});
 	gui.add(settings, 'numTwists', 0, 256).step(1).onChange(function (value) {
 		material.uniforms.numTwists.value = value;
@@ -118,9 +126,6 @@
 	gui.add(settings, 'torusKnotRadius', 0, 2).onChange(function (value) {
 		material.uniforms.torusKnotRadius.value = value;
 	});
-	gui.add(settings, 'numBumps', 0, 10).step(1).onChange(function (value) {
-		material.uniforms.numBumps.value = value;
-	});
 	gui.add(settings, 'numLoops', 1, 20).step(1).onChange(function (value) {
 		material.uniforms.numLoops.value = value;
 	});
@@ -130,9 +135,6 @@
 	gui.add(settings, 'shininess', 1, 100).onChange(function (value) {
 		material.uniforms.shininess.value = value;
 	});
-	gui.add(settings, 'epsilon', 1E-5, 1E-1).onChange(function (value) {
-		material.uniforms.epsilon.value = value;
-	});
 	gui.addColor(settings, 'firstColor').onChange(function (value) {
 		material.uniforms.firstColor.value = new THREE.Color(value).toArray();
 	});
@@ -141,6 +143,27 @@
 	});
 	gui.addColor(settings, 'thirdColor').onChange(function (value) {
 		material.uniforms.thirdColor.value = new THREE.Color(value).toArray();
+	});
+
+	var debug = gui.addFolder('Debug');
+	debug.open();
+	debug.add(settings, 'ambient').onChange(function (value) {
+		material.uniforms.uAmbient.value = value;
+	});
+	debug.add(settings, 'diffuse').onChange(function (value) {
+		material.uniforms.uDiffuse.value = value;
+	});
+	debug.add(settings, 'specular').onChange(function (value) {
+		material.uniforms.uSpecular.value = value;
+	});
+	debug.add(settings, 'debugLighting').onChange(function (value) {
+		material.uniforms.debugLighting.value = value;
+	});
+	debug.add(settings, 'debugNormals').onChange(function (value) {
+		material.uniforms.debugNormals.value = value;
+	});
+	debug.add(settings, 'epsilon', 1E-5, 1E-1).onChange(function (value) {
+		material.uniforms.epsilon.value = value;
 	});
 
 	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 80, 2800);

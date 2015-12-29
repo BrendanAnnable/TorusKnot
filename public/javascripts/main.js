@@ -26,6 +26,12 @@
 	stats.domElement.style.top = '0';
 	document.body.appendChild(stats.domElement);
 
+	var rendererStats   = new THREEx.RendererStats();
+	rendererStats.domElement.style.position = 'absolute';
+	rendererStats.domElement.style.left = '0px';
+	rendererStats.domElement.style.bottom   = '0px';
+	document.body.appendChild(rendererStats.domElement);
+
 	var gui = new dat.GUI();
 
 	let renderer = new THREE.WebGLRenderer({
@@ -164,5 +170,6 @@
 		controls.update();
 		renderer.render(scene, camera);
 		stats.end();
+		rendererStats.update(renderer);
 	}
 }(jQuery, THREE));

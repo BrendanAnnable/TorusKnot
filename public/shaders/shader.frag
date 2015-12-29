@@ -9,6 +9,7 @@ uniform vec4 firstColor;
 uniform vec4 secondColor;
 uniform vec4 thirdColor;
 
+uniform float mouseX;
 uniform float shininess;
 uniform float numBumps;
 uniform float numTwists;
@@ -62,9 +63,9 @@ vec3 mix3(vec3 a, vec3 b, vec3 c, float t) {
 void main() {
 	vec3 normal = normalize(vNormal);
 
-	normal.z += 0.04 * sin(32.0 * numBumps * vParams.x);
+	normal.z += 0.04 * sin(30.0 * numBumps * vParams.x);
 
-	if (debugNormals) {
+	if (debugNormals && mouseX > gl_FragCoord.x) {
 		gl_FragColor = vec4(normal, 1.0);
 		return;
 	}
@@ -85,15 +86,15 @@ void main() {
 	float k = (numBumps * vParams.x / numColors) / M_TAU;
 	vec3 color = mix3(firstColor.xyz, secondColor.xyz, thirdColor.xyz, k);
 
-	if (!debugLighting) {
+	if (!debugLighting || mouseX <= gl_FragCoord.x) {
 		lighting *= max(0.2, vPosition.z / 2.0 + 0.7);
 	}
 
-	if (uLighting) {
+	if (uLighting || mouseX <= gl_FragCoord.x) {
 		color *= lighting;
 	}
 
-	if (debugLighting) {
+	if (debugLighting && mouseX > gl_FragCoord.x) {
 		color = vec3(lighting);
 	}
 

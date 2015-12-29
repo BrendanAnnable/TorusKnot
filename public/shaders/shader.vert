@@ -56,6 +56,10 @@ vec2 from_polar(float r, float angle) {
 	return vec2(r * cos(angle), r * sin(angle));
 }
 
+float wave(float x, float min, float max) {
+    return (sin(x) + 1.0) / 2.0 * (max - min) + min;
+}
+
 vec3 torus_knot(float p, float q, float k, float time) {
 	float o = spinningSpeed * time * M_TAU;
 //	o = 0.0;
@@ -73,8 +77,8 @@ vec3 twisted_torus(float theta, float k) {
 //	float wave_offset = bumpSize * sin(numBumps * (theta - numTwists * k));
 //	float r = tubeRadius + wave_offset;
 
-	float distance = max(epsilon, tubeRadius + bumpSize * cos(numBumps * theta));
-	float angle = sin(2.0 * numBumps * theta) * bumpShift + (theta - numTwists * k);
+	float distance = max(epsilon, tubeRadius + bumpSize * cos(numBumps * theta));// * wave(16.0 * theta, 1.0, 1.2));
+	float angle = bumpShift * sin(2.0 * numBumps * theta) + (theta - numTwists * k);
 	return vec3(0, from_polar(distance, angle));
 }
 
@@ -85,8 +89,8 @@ vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, floa
 	vec3 pos2 = torus_knot(p, q, k_offset - epsilon, time);
 	vec3 pos3 = torus_knot(p, q, k_offset + epsilon, time);
 	mat3 frame = frenet_frame(pos2, pos3);
-	mat3 rotation = make_rotation_x(spinningSpeed * -time * M_TAU);
-//	mat3 rotation = make_rotation_x(0.0);
+//	mat3 rotation = make_rotation_x(spinningSpeed * -time * M_TAU);
+	mat3 rotation = make_rotation_x(0.0);
 	vec3 point = pos + frame * rotation * twisted_torus(theta, k_offset);
 //	return make_rotation_y(time * M_TAU / 20.0) * point;
 	return make_rotation_z(spinningSpeed * time * M_TAU) * point;

@@ -61,14 +61,14 @@
 		//'thirdColor': '#0000ff',
 		'shininess': 30,
 		'epsilon': 1E-2,
-		'tubeRadius': 0.18,
+		'tubeRadius': 0.15,
 		'torusKnotRadius': 1,
 		'numBumps': 3,
-		'bumpSize': 0.04,
+		'bumpSize': 0.1,
 		'bumpShift': 1 / 2,
-		'numTwists': 64,
+		'numTwists': 56,
 		'numCoils': 3,
-		'numLoops': 8,
+		'numLoops': 7,
 		'spinningSpeed': 1 / 5,
 		'wireframe': false
 	};
@@ -95,7 +95,8 @@
 			numCoils: {type: 'f', value: settings.numCoils},
 			numLoops: {type: 'f', value: settings.numLoops},
 			spinningSpeed: {type: 'f', value: settings.spinningSpeed},
-			debugNormals: {type: 'i', value: settings.debugNormals}
+			debugNormals: {type: 'i', value: settings.debugNormals},
+			mouseX: {type: 'f', value: 0}
 		},
 		vertexShader: get('shaders/shader.vert'),
 		fragmentShader: get('shaders/shader.frag')
@@ -170,7 +171,7 @@
 		material.uniforms.epsilon.value = value;
 	});
 
-	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 80, 2800);
+	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 80, 3000);
 	let mesh = new THREE.Mesh(geometry, material);
 	//let mesh = new THREE.Line(geometry, material);
 	scene.add(mesh);
@@ -180,6 +181,11 @@
 	let controls = new THREE.OrbitControls(camera, canvas);
 
 	requestAnimationFrame(render);
+
+	jQuery(canvas).mousemove(function (e) {
+		var parentOffset = $(this).parent().offset();
+		material.uniforms.mouseX.value = e.pageX - parentOffset.left;
+	});
 
 	function render() {
 		requestAnimationFrame(render);

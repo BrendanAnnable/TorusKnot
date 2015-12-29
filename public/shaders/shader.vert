@@ -72,10 +72,10 @@ vec3 torus_knot(float p, float q, float k, float time) {
 vec3 twisted_torus(float theta, float k) {
 //	float wave_offset = bumpSize * sin(numBumps * (theta - numTwists * k));
 //	float r = tubeRadius + wave_offset;
-	float t = theta - numTwists * k;
-	float r = tubeRadius + bumpSize * cos(numBumps * t);
-	float a = sin(2.0 * numBumps * t) / bumpShift + theta;
-	return vec3(0, from_polar(r, a));
+
+	float distance = max(epsilon, tubeRadius + bumpSize * cos(numBumps * theta));
+	float angle = sin(2.0 * numBumps * theta) * bumpShift + (theta - numTwists * k);
+	return vec3(0, from_polar(distance, angle));
 }
 
 vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, float speed) {
@@ -94,6 +94,7 @@ vec3 twisted_torus_knot(float p, float q, float theta, float k, float time, floa
 }
 
 void main() {
+
 	vParams = position;
 	float theta = position.x;
 	float k = position.y;
@@ -112,8 +113,9 @@ void main() {
 
 	vec4 mvPosition = modelViewMatrix * vec4(point, 1.0);
 //	vec4 mvPosition = modelViewMatrix * vec4(k, from_polar(0.1, theta), 1.0);
+//	vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
 
-	gl_PointSize = pointSize / length(mvPosition.xyz);
+//	gl_PointSize = pointSize / length(mvPosition.xyz);
 
 //	vPosition = mvPosition.xyz;
 	vPosition = mat3(modelViewMatrix) * point;

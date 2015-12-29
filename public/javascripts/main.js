@@ -43,10 +43,13 @@
 		'pointSize': 10,
 		'lighting': true,
 		'firstColor': '#7a7a7a',
+		//'firstColor': '#ff0000',
 		'secondColor': '#0a002a',
+		//'secondColor': '#00ff00',
 		'thirdColor': '#002a00',
+		//'thirdColor': '#0000ff',
 		'shininess': 5,
-		'epsilon': 1E-3,
+		'epsilon': 1E-2,
 		'tubeRadius': 0.18,
 		'torusKnotRadius': 1,
 		'numBumps': 3,
@@ -121,9 +124,9 @@
 	gui.add(settings, 'shininess', 0, 5).onChange(function (value) {
 		material.uniforms.shininess.value = value;
 	});
-	//gui.add(settings, 'epsilon', 1E-3, 1).onChange(function (value) {
-	//	material.uniforms.epsilon.value = value;
-	//});
+	gui.add(settings, 'epsilon', 1E-5, 1E-1).onChange(function (value) {
+		material.uniforms.epsilon.value = value;
+	});
 	gui.addColor(settings, 'firstColor').onChange(function (value) {
 		material.uniforms.firstColor.value = new THREE.Color(value).toArray();
 	});
@@ -134,8 +137,9 @@
 		material.uniforms.thirdColor.value = new THREE.Color(value).toArray();
 	});
 
-	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 100, 15000);
+	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 80, 2800);
 	let mesh = new THREE.Mesh(geometry, material);
+	//let mesh = new THREE.Line(geometry, material);
 	scene.add(mesh);
 
 	let clock = new THREE.Clock();

@@ -70,7 +70,9 @@ void main() {
 
 	lighting *= max(0.2, vPosition.z / 2.0 + 0.7);
 
-	vec3 color = mix3(firstColor.xyz, secondColor.xyz, thirdColor.xyz, (vParams.x - numTwists * vParams.y) / M_TAU);
+	const float numColors = 3.0;
+	float k = (numBumps * vParams.x / numColors) / M_TAU;
+	vec3 color = mix3(firstColor.xyz, secondColor.xyz, thirdColor.xyz, k);
 
 	if (uLighting) {
 		color *= lighting;

@@ -54,7 +54,7 @@
 		//'secondColor': '#00ff00',
 		'thirdColor': '#002a00',
 		//'thirdColor': '#0000ff',
-		'shininess': 5,
+		'shininess': 40,
 		'epsilon': 1E-2,
 		'tubeRadius': 0.18,
 		'torusKnotRadius': 1,
@@ -127,7 +127,7 @@
 	gui.add(settings, 'numCoils', 1, 10).step(1).onChange(function (value) {
 		material.uniforms.numCoils.value = value;
 	});
-	gui.add(settings, 'shininess', 0, 5).onChange(function (value) {
+	gui.add(settings, 'shininess', 1, 100).onChange(function (value) {
 		material.uniforms.shininess.value = value;
 	});
 	gui.add(settings, 'epsilon', 1E-5, 1E-1).onChange(function (value) {

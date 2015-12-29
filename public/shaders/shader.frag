@@ -63,7 +63,7 @@ void main() {
 		return;
 	}
 
-	float ambient = 0.1;
+	float ambient = 0.2;
 	float diffuse = max(0.0, normal.z);
 	float specular = pow(max(0.0, normal.z), shininess);
 	float lighting = ambient + diffuse + specular;
@@ -77,6 +77,11 @@ void main() {
 	if (uLighting) {
 		color *= lighting;
 	}
+
+//	color = vec3(ambient);
+//	color = vec3(diffuse);
+//	color = vec3(specular);
+//	color = vec3(lighting);
 
 	gl_FragColor = vec4(color, 1.0);
 }

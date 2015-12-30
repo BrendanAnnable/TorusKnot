@@ -38,6 +38,8 @@
 		canvas: canvas,
 		antialias: true
 	});
+	//renderer.setClearColor('#7F99B3');
+	//renderer.setClearColor('#050505');
 	renderer.setClearColor('#000');
 
 	let scene = new THREE.Scene();
@@ -48,6 +50,7 @@
 	var settings = {
 		'pointSize': 10,
 		'lighting': true,
+		//'lighting': false,
 		'ambient': true,
 		'diffuse': true,
 		'specular': true,
@@ -96,7 +99,7 @@
 			numLoops: {type: 'f', value: settings.numLoops},
 			spinningSpeed: {type: 'f', value: settings.spinningSpeed},
 			debugNormals: {type: 'i', value: settings.debugNormals},
-			mouseX: {type: 'f', value: 0}
+			mouseX: {type: 'f', value: 1E5}
 		},
 		vertexShader: get('shaders/shader.vert'),
 		fragmentShader: get('shaders/shader.frag')
@@ -172,6 +175,7 @@
 	});
 
 	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 80, 3000);
+	material.side = THREE.DoubleSide;
 	let mesh = new THREE.Mesh(geometry, material);
 	//let mesh = new THREE.Line(geometry, material);
 	scene.add(mesh);

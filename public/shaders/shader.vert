@@ -108,16 +108,20 @@ void main() {
 	float q = numLoops;
 	vec3 point = twisted_torus_knot(p, q, theta, k, time, speed);
 
-	vec3 theta_dx = twisted_torus_knot(p, q, theta - epsilon, k, time, speed) - twisted_torus_knot(p, q, theta + epsilon, k, time, speed);
-	vec3 k_dx = twisted_torus_knot(p, q, theta, k - epsilon, time, speed) - twisted_torus_knot(p, q, theta, k + epsilon, time, speed);
+	vec3 theta_tangent = twisted_torus_knot(p, q, theta - epsilon, k, time, speed) - twisted_torus_knot(p, q, theta + epsilon, k, time, speed);
+	vec3 k_tangent = twisted_torus_knot(p, q, theta, k - epsilon, time, speed) - twisted_torus_knot(p, q, theta, k + epsilon, time, speed);
 
-	vec3 normal = normalize(cross(theta_dx, k_dx));
+	vec3 normal = normalize(cross(theta_tangent, k_tangent));
 
 	vNormal = normalMatrix * normal;
 
 	vec4 mvPosition = modelViewMatrix * vec4(point, 1.0);
 //	vec4 mvPosition = modelViewMatrix * vec4(k, from_polar(0.1, theta), 1.0);
 //	vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+
+//	vec4 mvPosition2 = modelViewMatrix * vec4(position, 1.0);
+//	float s = -cos(M_PI * time / 10.0) / 2.0 + 0.5;
+//	mvPosition = mvPosition2 * (1.0 - s) + s * mvPosition;
 
 //	gl_PointSize = pointSize / length(mvPosition.xyz);
 

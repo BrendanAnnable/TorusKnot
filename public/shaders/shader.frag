@@ -9,6 +9,7 @@ uniform vec4 firstColor;
 uniform vec4 secondColor;
 uniform vec4 thirdColor;
 
+uniform float epsilon;
 uniform float mouseX;
 uniform float shininess;
 uniform float numBumps;
@@ -19,6 +20,7 @@ uniform bool uDiffuse;
 uniform bool uSpecular;
 uniform bool debugNormals;
 uniform bool debugLighting;
+uniform sampler2D normalMap;
 
 varying vec3 vParams;
 varying vec3 vPosition;
@@ -63,7 +65,7 @@ vec3 mix3(vec3 a, vec3 b, vec3 c, float t) {
 void main() {
 	vec3 normal = normalize(vNormal);
 
-	normal.z += 0.04 * sin(30.0 * numBumps * vParams.x);
+	normal.z += texture2D(normalMap, vec2(numBumps * vParams.x / M_TAU, 0.0)).r * 2.0 - 1.0;
 
 	if (debugNormals && mouseX > gl_FragCoord.x) {
 		gl_FragColor = vec4(normal, 1.0);

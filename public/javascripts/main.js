@@ -6,7 +6,7 @@
 	}
 
 	function get (url) {
-		var content = '';
+		let content = '';
 		jQuery.ajax({
 			url: url,
 			success: function (response) {
@@ -19,6 +19,32 @@
 
 	let canvas = document.getElementById('canvas');
 
+	function generateNormalMap () {
+		let renderTarget = new THREE.WebGLRenderTarget(1024, 1024, {
+			wrapS: THREE.RepeatWrapping,
+			wrapT: THREE.RepeatWrapping,
+			magFilter: THREE.LinearFilter,
+			minFilter: THREE.LinearMipMapLinearFilter,
+			anisotropy: renderer.getMaxAnisotropy(),
+			depthBuffer: false,
+			stencilBuffeR: false
+		});
+
+		let camera = new THREE.OrthographicCamera(0, 1, 1, 0, 0, 2);
+		camera.position.z = 1;
+		let scene = new THREE.Scene();
+		let geometry = new THREE.PlaneBufferGeometry(1, 1);
+		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, 0));
+		let material = new THREE.RawShaderMaterial({
+			vertexShader: get('shaders/normal.vert'),
+			fragmentShader: get('shaders/normal.frag')
+		});
+		let mesh = new THREE.Mesh(geometry, material);
+		scene.add(mesh);
+		renderer.render(scene, camera, renderTarget);
+		return renderTarget;
+	}
+
 	let stats = new Stats();
 	stats.setMode(0);
 	stats.domElement.style.position = 'absolute';
@@ -26,28 +52,31 @@
 	stats.domElement.style.top = '0';
 	document.body.appendChild(stats.domElement);
 
-	var rendererStats   = new THREEx.RendererStats();
+	let rendererStats   = new THREEx.RendererStats();
 	rendererStats.domElement.style.position = 'absolute';
 	rendererStats.domElement.style.left = '0px';
 	rendererStats.domElement.style.bottom   = '0px';
 	document.body.appendChild(rendererStats.domElement);
 
-	var gui = new dat.GUI();
+	let gui = new dat.GUI();
 
 	let renderer = new THREE.WebGLRenderer({
 		canvas: canvas,
 		antialias: true
 	});
+	//renderer.getContext().getExtension('OES_standard_derivatives');
+	//renderer.getContext().getExtension('OES_texture_float');
+	//renderer.getContext().getExtension('OES_texture_float_linear');
 	//renderer.setClearColor('#7F99B3');
 	//renderer.setClearColor('#050505');
 	renderer.setClearColor('#000');
 
 	let scene = new THREE.Scene();
-	let camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+	let camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
 	//let camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1000);
-	camera.position.z = 5.5;
+	camera.position.z = 8;
 
-	var settings = {
+	let settings = {
 		'pointSize': 10,
 		'lighting': true,
 		//'lighting': false,
@@ -72,7 +101,7 @@
 		'numTwists': 56,
 		'numCoils': 3,
 		'numLoops': 7,
-		'spinningSpeed': 1 / 5,
+		'spinningSpeed': 0.1,
 		'wireframe': false
 	};
 	let material = new THREE.RawShaderMaterial({
@@ -99,10 +128,12 @@
 			numLoops: {type: 'f', value: settings.numLoops},
 			spinningSpeed: {type: 'f', value: settings.spinningSpeed},
 			debugNormals: {type: 'i', value: settings.debugNormals},
-			mouseX: {type: 'f', value: 1E5}
+			mouseX: {type: 'f', value: 1E5},
+			normalMap: {type: 't', value: generateNormalMap()}
 		},
 		vertexShader: get('shaders/shader.vert'),
-		fragmentShader: get('shaders/shader.frag')
+		fragmentShader: get('shaders/shader.frag'),
+		side: THREE.FrontSide
 	});
 	gui.add(settings, 'lighting').onChange(function (value) {
 		material.uniforms.uLighting.value = value;
@@ -150,7 +181,7 @@
 		material.uniforms.thirdColor.value = new THREE.Color(value).toArray();
 	});
 
-	var debug = gui.addFolder('Debug');
+	let debug = gui.addFolder('Debug');
 	debug.open();
 	debug.add(settings, 'wireframe').onChange(function (value) {
 		material.wireframe = value;
@@ -209,7 +240,7 @@
 	requestAnimationFrame(render);
 
 	jQuery(canvas).mousemove(function (e) {
-		var parentOffset = $(this).parent().offset();
+		let parentOffset = $(this).parent().offset();
 		material.uniforms.mouseX.value = e.pageX - parentOffset.left;
 	});
 

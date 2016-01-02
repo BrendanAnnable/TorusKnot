@@ -25,8 +25,6 @@ varying vec3 vParams;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
-//const float EPS = 0.0001;
-
 mat3 frenet_frame(vec3 a, vec3 b) {
 	vec3 tangent = a - b;
 	vec3 binormal = normalize(cross(tangent, a + b));

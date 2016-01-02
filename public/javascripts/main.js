@@ -64,6 +64,7 @@
 		canvas: canvas,
 		antialias: true
 	});
+	renderer.sortObjects = false;
 	//renderer.getContext().getExtension('OES_standard_derivatives');
 	//renderer.getContext().getExtension('OES_texture_float');
 	//renderer.getContext().getExtension('OES_texture_float_linear');
@@ -205,8 +206,7 @@
 		material.uniforms.epsilon.value = value;
 	});
 
-	let box = new THREE.BoxGeometry(500, 500, 500);
-	let cube = THREE.ShaderLib.cube;
+	let box = new THREE.PlaneBufferGeometry(2, 2);
 	let tCube = new THREE.CubeTextureLoader().load([
 		'images/skybox/sky_right1.png',
 		'images/skybox/sky_left2.png',
@@ -216,13 +216,14 @@
 		'images/skybox/sky_back6.png'
 	]);
 
-	let uniforms = THREE.UniformsUtils.clone(cube.uniforms);
-	uniforms.tCube.value = tCube;
-	let skybox = new THREE.Mesh(box, new THREE.ShaderMaterial({
-		uniforms: uniforms,
-		vertexShader: cube.vertexShader,
-		fragmentShader: cube.fragmentShader,
-		side: THREE.BackSide,
+	let skybox = new THREE.Mesh(box, new THREE.RawShaderMaterial({
+		uniforms: {
+			inverseProjectionMatrix: {type: 'm4', value: new THREE.Matrix4()},
+			tCube: {type: 't', value: tCube}
+		},
+		vertexShader: get('shaders/skybox.vert'),
+		fragmentShader: get('shaders/skybox.frag'),
+		side: THREE.FrontSide,
 		depthWrite: false
 	}));
 	scene.add(skybox);
@@ -230,7 +231,6 @@
 	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 80, 5000);
 	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(Math.PI, Math.PI, 0));
 	let mesh = new THREE.Mesh(geometry, material);
-	//let mesh = new THREE.Line(geometry, material);
 	scene.add(mesh);
 
 	let clock = new THREE.Clock();
@@ -249,16 +249,16 @@
 
 		stats.begin();
 
-		material.uniforms.time.value = clock.getElapsedTime();
-
 		if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
 			camera.aspect = canvas.clientWidth / canvas.clientHeight;
 			camera.updateProjectionMatrix();
 			renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 		}
 
+		material.uniforms.time.value = clock.getElapsedTime();
+		skybox.material.uniforms.inverseProjectionMatrix.value.getInverse(camera.projectionMatrix);
+
 		controls.update();
-		skybox.position.copy(camera.position);
 		renderer.render(scene, camera);
 		stats.end();
 		rendererStats.update(renderer);

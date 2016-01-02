@@ -174,8 +174,30 @@
 		material.uniforms.epsilon.value = value;
 	});
 
-	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 80, 3000);
-	material.side = THREE.DoubleSide;
+	let box = new THREE.BoxGeometry(500, 500, 500);
+	let cube = THREE.ShaderLib.cube;
+	let tCube = new THREE.CubeTextureLoader().load([
+		'images/skybox/sky_right1.png',
+		'images/skybox/sky_left2.png',
+		'images/skybox/sky_top3.png',
+		'images/skybox/sky_bottom4.png',
+		'images/skybox/sky_front5.png',
+		'images/skybox/sky_back6.png'
+	]);
+
+	let uniforms = THREE.UniformsUtils.clone(cube.uniforms);
+	uniforms.tCube.value = tCube;
+	let skybox = new THREE.Mesh(box, new THREE.ShaderMaterial({
+		uniforms: uniforms,
+		vertexShader: cube.vertexShader,
+		fragmentShader: cube.fragmentShader,
+		side: THREE.BackSide,
+		depthWrite: false
+	}));
+	scene.add(skybox);
+
+	let geometry = new THREE.PlaneBufferGeometry(Math.TAU, Math.TAU, 80, 5000);
+	geometry.applyMatrix(new THREE.Matrix4().makeTranslation(Math.PI, Math.PI, 0));
 	let mesh = new THREE.Mesh(geometry, material);
 	//let mesh = new THREE.Line(geometry, material);
 	scene.add(mesh);
@@ -205,6 +227,7 @@
 		}
 
 		controls.update();
+		skybox.position.copy(camera.position);
 		renderer.render(scene, camera);
 		stats.end();
 		rendererStats.update(renderer);

@@ -74,29 +74,29 @@ void main() {
 
 	float lighting = 0.0;
 
-	if (uAmbient) {
+	//if (uAmbient) {
 		lighting += 0.2;
-	}
-	if (uDiffuse) {
+	//}
+	//if (uDiffuse) {
 		lighting += max(0.0, normal.z);
-	}
-	if (uSpecular) {
+	//}
+	//if (uSpecular) {
 		lighting += pow(max(0.0, normal.z), shininess);
-	}
+	//}
 
 	const float numColors = 3.0;
 	float k = (numBumps * vParams.x / numColors) / M_TAU;
 	vec3 color = mix3(firstColor.xyz, secondColor.xyz, thirdColor.xyz, k);
 
-	if (uLighting || mouseX <= gl_FragCoord.x) {
+	if (true || uLighting || mouseX <= gl_FragCoord.x) {
 		color *= lighting;
 	}
 
-	if (debugLighting && mouseX > gl_FragCoord.x) {
+	if (false && debugLighting && mouseX > gl_FragCoord.x) {
 		color = vec3(lighting);
 	}
 
-	if (uLighting || mouseX <= gl_FragCoord.x) {
+	if (true || uLighting || mouseX <= gl_FragCoord.x) {
 //		lighting *= max(0.2, vPosition.z / 2.0 + 0.7);
 		float b = 1.5;
 		float fogAmount = 1.0 - exp(b * min(0.0, vPosition.z));

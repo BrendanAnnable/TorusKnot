@@ -9,10 +9,7 @@ attribute vec3 position;
 varying vec3 eyeDirection;
 
 mat3 transpose(mat3 m) {
-	vec3 x = m[0];
-	vec3 y = m[1];
-	vec3 z = m[2];
-	return mat3(vec3(x.x, y.x, z.x), vec3(x.y, y.y, z.y), vec3(x.z, y.z, z.z));
+	return mat3(vec3(m[0][0], m[1][0], m[2][0]), vec3(m[0][1], m[1][1], m[2][1]), vec3(m[0][2], m[1][2], m[2][2]));
 }
 
 void main() {

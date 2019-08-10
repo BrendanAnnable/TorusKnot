@@ -5,9 +5,9 @@ precision highp float;
 
 uniform float time;
 
-uniform vec4 firstColor;
-uniform vec4 secondColor;
-uniform vec4 thirdColor;
+uniform vec3 firstColor;
+uniform vec3 secondColor;
+uniform vec3 thirdColor;
 
 uniform float epsilon;
 uniform float mouseX;
@@ -86,7 +86,7 @@ void main() {
 
 	const float numColors = 3.0;
 	float k = (numBumps * vParams.x / numColors) / M_TAU;
-	vec3 color = mix3(firstColor.xyz, secondColor.xyz, thirdColor.xyz, k);
+	vec3 color = mix3(firstColor, secondColor, thirdColor, k);
 
 	if (true || uLighting || mouseX <= gl_FragCoord.x) {
 		color *= lighting;

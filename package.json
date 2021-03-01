@@ -17,7 +17,7 @@
     "koa-compress": "^3.0.0",
     "koa-static": "^5.0.0",
     "stats.js": "^0.17.0",
-    "three": "^0.107.0",
+    "three": "^0.125.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
   },
